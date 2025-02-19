@@ -60,7 +60,6 @@ func GetMetrics(token, clusterId string) (TotalMetrics, error) {
 
 	totalMetrics := calculateTotalMetrics(response)
 	return totalMetrics, nil
-
 }
 
 func calculateTotalMetrics(response Response) TotalMetrics {

@@ -1,38 +1,47 @@
 {
-    "status": "ok",
-    "nodes": [
-        {
-            "name": "192.168.133.240",
-            "uid": "b39f187a-b7fe-41f8-b6a2-62bf6620e36f",
-            "cpu_capacity": "2",
-            "memory_capacity": "4037520Ki",
-            "pod_capacity": "110",
-            "in_use_cpu": "77878864n",
-            "in_use_memory": "1878184Ki",
-            "podsWithoutIP": 1,
-            "podsWithIP": 5
-        },
-        {
-            "name": "192.168.133.241",
-            "uid": "339c49ea-ef2d-4824-9108-e14d64d7dafd",
-            "cpu_capacity": "2",
-            "memory_capacity": "4033956Ki",
-            "pod_capacity": "110",
-            "in_use_cpu": "50436289n",
-            "in_use_memory": "2529304Ki",
-            "podsWithoutIP": 1,
-            "podsWithIP": 10
-        },
-        {
-            "name": "192.168.133.242",
-            "uid": "8453f030-f93a-42e9-8bfa-c7ae0c4ff003",
-            "cpu_capacity": "2",
-            "memory_capacity": "4033948Ki",
-            "pod_capacity": "110",
-            "in_use_cpu": "51170144n",
-            "in_use_memory": "2151120Ki",
-            "podsWithoutIP": 0,
-            "podsWithIP": 9
-        }
-    ]
+  "status": "ok",
+  "msg": [
+    {
+      "_id": {
+        "$oid": "67b54bc569081018aed48c4a"
+      },
+      "type": "liveness probe must be present",
+      "check_id": "GITA-PRO-004",
+      "msg": {
+        "container_name": "rke-metrics-addon-pod",
+        "reason": "does not have resources configurade"
+      },
+      "severity": "HIGH",
+      "config_id": "67a64a2295a2496c6951f20b",
+      "kind": "container",
+      "id": "8a370ff6-3e25-4304-9f78-c025b628e267",
+      "name": "rke-metrics-addon-deploy-job-m52gx",
+      "namespace": "kube-system",
+      "creation_date": {
+        "$date": "2025-02-19T15:11:00.827Z"
+      },
+      "data_hora": {
+        "$date": "2025-01-22T15:59:56Z"
+      },
+      "cliente": {
+        "cluster_id": "e2d718b6919aab2b2cb459520e48f278"
+      },
+      "ack": {
+        "state": "open",
+        "timeline": [
+          {
+            "_id": "67b54bc469081018aed48c46",
+            "user": "",
+            "email": "",
+            "message": "",
+            "date": {
+              "$date": "2025-01-22T15:59:56Z"
+            },
+            "state": "open"
+          }
+        ]
+      }
+    }
+  ],
+  "total": 1
 }
