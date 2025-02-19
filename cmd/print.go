@@ -42,7 +42,7 @@ in the cost of a few lines in CLI
 			for j, cluster := range msg.Clusters {
 				fmt.Printf("   %d.%d. %s (%s)\n", i+1, j+1, cluster.Name, cluster.ClusterID)
 				
-				cm, _ := metrics.GetMetrics(authResponse.AccessToken, cluster.ClusterID)
+				cm, _ := metrics.GetClusterMetrics(authResponse.AccessToken, cluster.ClusterID)
 				fmt.Println("    Usage:")
 				fmt.Printf("    - CPU: %.2f%%\n", cm.CPUUsePercentage)
 				fmt.Printf("    - Mem: %.2f%%\n", cm.MemoryUsePercentage,)
