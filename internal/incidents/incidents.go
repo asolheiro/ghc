@@ -86,7 +86,7 @@ func (ct *CustomTime) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func GetIncidents(token, clusterId string) ([]Incident, error) {
+func GetIncidents(token, clusterId string) (Response, error) {
 	url := fmt.Sprintf(
 		"https://api-principal-geral.api.gita.cloud/incident/%s?page=1&limit=100",
 		clusterId,
@@ -99,12 +99,12 @@ func GetIncidents(token, clusterId string) ([]Incident, error) {
 		token,
 	)
 	if err != nil {
-		return nil, fmt.Errorf("error requesting data, err: %w", err)
+		return Response{}, fmt.Errorf("error requesting data, err: %w", err)
 	}
 
 	var response Response
 	if err := json.NewDecoder(bytes.NewReader(body)).Decode(&response); err != nil {
-		return nil, fmt.Errorf("error decoding JSON response, err: %w", err)
+		return Response{}, fmt.Errorf("error decoding JSON response, err: %w", err)
 	}
-	return response.Msg, nil
+	return response, nil
 }

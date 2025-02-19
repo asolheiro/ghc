@@ -14,7 +14,9 @@ import (
 	"github.com/asolheiro/gita-healthcheck/internal/security"
 	"github.com/spf13/cobra"
 )
- 
+
+//go:generate go run main.go
+
 var printHcCmd = &cobra.Command{
 	Use:   "print-hc",
 	Short: "Print on terminal is a simple report of Gita's plataform",
@@ -59,10 +61,10 @@ in the cost of a few lines in CLI
 				if err != nil {
 					log.Fatal(err)
 				}
-				fmt.Println("\n    Incidents: ", len(incidents))
-				if len(incidents) > 0 {
+				fmt.Println("\n    Incidents: ", incidents.Total)
+				if incidents.Total > 0 {
 					var (loki, monitoring, cattleSystem, gita, kubeSystem, certManager, others int)
-					for _, incident := range incidents {
+					for _, incident := range incidents.Msg {
 						switch incident.Namespace {
 						case "loki":
 							loki += 1

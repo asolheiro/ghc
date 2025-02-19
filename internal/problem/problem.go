@@ -12,11 +12,11 @@ import (
 
 type Response struct {
 	Status string     `json:"status"`
-	Msg    []Security `json:"msg"`
+	Msg    []Problem `json:"msg"`
 	Total  int        `json:"total"`
 }
 
-type Security struct {
+type Problem struct {
 	ID           ObjectID  `json:"_id"`
 	Type         string    `json:"type"`
 	CheckID      string    `json:"check_id"`
