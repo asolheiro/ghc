@@ -1,0 +1,38 @@
+{
+    "status": "ok",
+    "nodes": [
+        {
+            "name": "192.168.133.240",
+            "uid": "b39f187a-b7fe-41f8-b6a2-62bf6620e36f",
+            "cpu_capacity": "2",
+            "memory_capacity": "4037520Ki",
+            "pod_capacity": "110",
+            "in_use_cpu": "77878864n",
+            "in_use_memory": "1878184Ki",
+            "podsWithoutIP": 1,
+            "podsWithIP": 5
+        },
+        {
+            "name": "192.168.133.241",
+            "uid": "339c49ea-ef2d-4824-9108-e14d64d7dafd",
+            "cpu_capacity": "2",
+            "memory_capacity": "4033956Ki",
+            "pod_capacity": "110",
+            "in_use_cpu": "50436289n",
+            "in_use_memory": "2529304Ki",
+            "podsWithoutIP": 1,
+            "podsWithIP": 10
+        },
+        {
+            "name": "192.168.133.242",
+            "uid": "8453f030-f93a-42e9-8bfa-c7ae0c4ff003",
+            "cpu_capacity": "2",
+            "memory_capacity": "4033948Ki",
+            "pod_capacity": "110",
+            "in_use_cpu": "51170144n",
+            "in_use_memory": "2151120Ki",
+            "podsWithoutIP": 0,
+            "podsWithIP": 9
+        }
+    ]
+}

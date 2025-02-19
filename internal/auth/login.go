@@ -1,10 +1,14 @@
-package internal
+package auth
 
 import (
 	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
+
+	"github.com/joho/godotenv"
+	"golang.org/x/term"
 )
 
 const authUrl = "https://api-principal-geral.api.gita.cloud/auth/login"
@@ -18,6 +22,42 @@ type AuthResponse struct {
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
 	TokenType    string `json:"token_type"`
+}
+
+func Authentication() (*AuthResponse, error) {
+	var authResponse *AuthResponse
+		err := godotenv.Load()
+		if err != nil {
+			fmt.Println("No .env file found, please, enter your credentials:")
+
+			var email string
+			fmt.Print("\ne-mail: ")
+			fmt.Scan(&email)
+	
+			fmt.Print("password: ")
+			bytePassword, err := term.ReadPassword(int(os.Stdin.Fd()))
+			if err != nil {
+				return nil, fmt.Errorf("failed to read password: %v", err)
+			}
+
+			password := string(bytePassword)
+			authResponse, err = Login(
+				email, 
+				password,
+			)
+			if err != nil {
+				return nil, fmt.Errorf("failed to authenticate, err: %v", err)
+			}
+		} else {
+			authResponse, err = Login(
+				os.Getenv("EMAIL"), 
+				os.Getenv("PASSWORD"),
+			)
+			if err != nil {
+				return nil, fmt.Errorf("failed to authenticate, err: %v", err)
+			}
+		}
+	return authResponse, nil
 }
 
 func Login(email, password string) (*AuthResponse, error){
@@ -48,7 +88,6 @@ func Login(email, password string) (*AuthResponse, error){
 	}
 	defer response.Body.Close()
 
-	fmt.Println(request.Body)
 	if response.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("request failed with status code: %d", response.StatusCode)
 	}
