@@ -37,7 +37,7 @@ var generateMdCmd = &cobra.Command{
                 fmt.Printf("  Δ Cluster %d: %s (ID: %s)\n", i+1, cluster.Name, cluster.ClusterID)
             }
             
-            mainFile := fmt.Sprintf("./reports/healthCheck-%s.md", msgCount.Organization.Name)
+            mainFile := fmt.Sprintf("healthCheck-%s.md", msgCount.Organization.Name)
             
             f1, err := os.OpenFile(mainFile, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
             if err != nil {
