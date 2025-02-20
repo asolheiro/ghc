@@ -1,30 +1,25 @@
 package cmd
 
 import (
-    "fmt"
-    "log"
-    "os"
-    "github.com/asolheiro/gita-healthcheck/internal/alerts"
-    "github.com/asolheiro/gita-healthcheck/internal/auth"
-    "github.com/asolheiro/gita-healthcheck/internal/count"
-    "github.com/asolheiro/gita-healthcheck/internal/incidents"
-    "github.com/asolheiro/gita-healthcheck/internal/md"
-    "github.com/asolheiro/gita-healthcheck/internal/metrics"
-    "github.com/asolheiro/gita-healthcheck/internal/problem"
-    "github.com/asolheiro/gita-healthcheck/internal/security"
-    "github.com/spf13/cobra"
-    markdown "github.com/nao1215/markdown"
+	"fmt"
+	"log"
+	"os"
+
+
+	"github.com/asolheiro/gita-healthcheck/internal/alerts"
+	"github.com/asolheiro/gita-healthcheck/internal/auth"
+	"github.com/asolheiro/gita-healthcheck/internal/count"
+	"github.com/asolheiro/gita-healthcheck/internal/incidents"
+	"github.com/asolheiro/gita-healthcheck/internal/md"
+	"github.com/asolheiro/gita-healthcheck/internal/metrics"
+	"github.com/asolheiro/gita-healthcheck/internal/problem"
+	"github.com/asolheiro/gita-healthcheck/internal/security"
+	"github.com/spf13/cobra"
 )
 
 var generateMdCmd = &cobra.Command{
     Use:   "generate-md",
     Short: "Generate a markdown file with a simple report of Gita's plataform",
-    Long: `
-Gita HealthCheck is a simple report generator of Gita's plataform that automatize
-the manual work that analists do every morning.
-It gives the user a complete markdown report of what he can see in the plataform
-in the cost of a few lines in CLI
-    `,
     Run: func(cmd *cobra.Command, args []string) {
         authResponse, err := auth.Authentication()
         if err != nil {
@@ -34,36 +29,60 @@ in the cost of a few lines in CLI
         count, _ := count.GetUserCount(authResponse.AccessToken)
         
         for _, msgCount := range count.Msg {
-            fmt.Printf("\ngenerating report to %s\n", msgCount.Organization.Name)
+            fmt.Printf("\nGenerating report for organization: %s\n", msgCount.Organization.Name)
+            fmt.Printf("Total clusters found: %d\n", len(msgCount.Clusters))
+            
+            // Print all clusters first to verify the data
+            for i, cluster := range msgCount.Clusters {
+                fmt.Printf("Cluster %d: %s (ID: %s)\n", i+1, cluster.Name, cluster.ClusterID)
+            }
             
             mainFile := fmt.Sprintf("healthCheck-%s.md", msgCount.Organization.Name)
             
-            f1, err := os.Create(mainFile)
+            // Create the file with write permissions
+            f1, err := os.OpenFile(mainFile, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
             if err != nil {
-                fmt.Printf("Error creating main file %s, err: %v\n", mainFile, err)
-                return
+                log.Fatalf("Error creating main file: %v", err)
+            }
+            defer f1.Close()
+
+            // Write the organization header first
+            orgHeader := fmt.Sprintf("# %s\n\n", msgCount.Organization.Name)
+            if _, err := f1.WriteString(orgHeader); err != nil {
+                log.Fatalf("Error writing org header: %v", err)
             }
             
-            m := markdown.NewMarkdown(f1)
-            m.H1(msgCount.Organization.Name)
-            m.Build()
-            
-            f1.Close()
-            
+            // Process each cluster
             for i, cluster := range msgCount.Clusters {
-                fmt.Println("- cluster: ", cluster.Name)
+                fmt.Printf("Processing cluster %d/%d: %s\n", i+1, len(msgCount.Clusters), cluster.Name)
                 
-                incidents, _ := incidents.GetIncidents(authResponse.AccessToken, cluster.ClusterID)
-                problem, _ := problem.GetProblems(authResponse.AccessToken, cluster.ClusterID)
-                security, _ := security.GetSecurity(authResponse.AccessToken, cluster.ClusterID)
-                clusterMetrics, _ := metrics.GetClusterMetrics(authResponse.AccessToken, cluster.ClusterID)
-                nodeMetrics, _ := metrics.GetNodeMetrics(authResponse.AccessToken, cluster.ClusterID)
-                alertsList, _ := alerts.GetAlerts(authResponse.AccessToken, cluster.ClusterID)
+                incidents, err := incidents.GetIncidents(authResponse.AccessToken, cluster.ClusterID)
+                if err != nil {
+                    log.Fatal(err)
+                }
+                problem, err := problem.GetProblems(authResponse.AccessToken, cluster.ClusterID)
+                if err != nil {
+                    log.Fatal(err)
+                }
+                security, err := security.GetSecurity(authResponse.AccessToken, cluster.ClusterID)
+                if err != nil {
+                    log.Fatal(err)
+                }
+                clusterMetrics, err := metrics.GetClusterMetrics(authResponse.AccessToken, cluster.ClusterID)
+                if err != nil {
+                    log.Fatal(err)
+                }
+                nodeMetrics, err := metrics.GetNodeMetrics(authResponse.AccessToken, cluster.ClusterID)
+                if err != nil {
+                    log.Fatal(err)
+                }
+                alertsList, err := alerts.GetAlerts(authResponse.AccessToken, cluster.ClusterID)
+                if err != nil {
+                    log.Fatal(err)
+                }
                 
-                tmpFile := fmt.Sprintf("%d-gita-report-%s.md", i+1, cluster.Name)
-                
-                md.GenerateFile(md.FileVars{
-                    Index:          i + 1, // Ensure we're using 1-based indexing
+                fileVars := md.FileVars{
+                    Index:          i + 1,  // Make sure index starts at 1
                     Auth:           *authResponse,
                     OrgName:        msgCount.Organization.Name,
                     Cluster:        cluster,
@@ -73,33 +92,34 @@ in the cost of a few lines in CLI
                     ClusterMetrics: clusterMetrics,
                     NodeMetrics:    nodeMetrics,
                     AlertsList:     alertsList,
-                })
+                }
+
+                // Generate content for this cluster
+                tmpFile := fmt.Sprintf("%d-gita-report-%s.md", i+1, cluster.Name)
+                md.GenerateFile(fileVars)
                 
+                // Read the generated content
                 tmpContent, err := os.ReadFile(tmpFile)
                 if err != nil {
-                    fmt.Printf("Error reading temporary file %s, err: %v\n", tmpFile, err)
-                    return
+                    log.Fatalf("Error reading temp file: %v", err)
                 }
                 
-                f1, err = os.OpenFile(mainFile, os.O_APPEND|os.O_WRONLY, 0644)
-                if err != nil {
-                    fmt.Printf("Error opening main file %s for appending, err: %v\n", mainFile, err)
-                    return
+                // Seek to end of file before writing new content
+                if _, err := f1.Seek(0, 2); err != nil {
+                    log.Fatalf("Error seeking file: %v", err)
                 }
                 
-                f1.WriteString("\n")
-                
+                // Write the cluster content
                 if _, err := f1.Write(tmpContent); err != nil {
-                    fmt.Printf("Error appending content to main file, err: %v\n", err)
-                    f1.Close()
-                    return
+                    log.Fatalf("Error writing cluster content: %v", err)
                 }
                 
-                f1.Close()
-                
+                // Remove temp file
                 if err := os.Remove(tmpFile); err != nil {
-                    fmt.Printf("Error removing temporary file %s, err: %v\n", tmpFile, err)
+                    log.Printf("Warning: couldn't remove temp file %s: %v", tmpFile, err)
                 }
+                
+                fmt.Printf("Finished processing cluster %d: %s\n", i+1, cluster.Name)
             }
         }
     },

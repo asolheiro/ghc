@@ -1,27 +1,27 @@
-# HEX360
+# JPVTech
 
-## 1. Geoserver-prd
+## 1. global-prd
 ### 1.1. Informações gerais
 | DESCRIÇÃO  | NÚMERO |
 |------------|--------|
-| Nodes      |      3 |
+| Nodes      |      7 |
 | Incidentes |      0 |
-| Problemas  |    266 |
-| Segurança  |    239 |
+| Problemas  |    691 |
+| Segurança  |    436 |
 
-|       VERSÃO        | SUPORTE | FIM DO SUPORTE |
-|---------------------|---------|----------------|
-| v1.30.5-gke.1355000 | 🟥      | ---            |
+| VERSÃO  | SUPORTE | FIM DO SUPORTE |
+|---------|---------|----------------|
+| v1.26.4 | 🟥      | ---            |
 
 > Legenda:
 >
 > 🟩 - suporte longo; 🟨 - suporte chegando ao fim; 🟥 - fim do suporte eminente.
 ### 1.2. Informações de recursos
-| RECURSOS |  CAPACIDADE  | STATUS |
-|----------|--------------|--------|
-| CPU      | 6 cores      | 🟩     |
-| Memória  | 49158000 Gib | 🟩     |
-| PODS     |          330 | 🟩     |
+| RECURSOS |  CAPACIDADE   | STATUS |
+|----------|---------------|--------|
+| CPU      | 28 cores      | 🟩     |
+| Memória  | 170434448 Gib | 🟩     |
+| PODS     |           770 | 🟩     |
 
 > Legenda:
 >
@@ -29,9 +29,9 @@
 ### 1.3. Uso de memória dos nodes
 |  GRUPO  | QUANTIDADE | STATUS |
 |---------|------------|--------|
-| X < 65% |          3 | 🟩     |
+| X < 65% |          4 | 🟩     |
 | X > 65% |          0 | 🟨     |
-| X > 80% |          0 | 🟥     |
+| X > 80% |          3 | 🟥     |
 
 > Legenda:
 >
@@ -52,18 +52,18 @@
 > Legenda:
 >
 > 🟩 - sem incidentes; 🟥 - possui incidentes.
----## 2. Produção
+---## 2. jpv-production-eks
 ### 2.1. Informações gerais
 | DESCRIÇÃO  | NÚMERO |
 |------------|--------|
-| Nodes      |      6 |
+| Nodes      |      8 |
 | Incidentes |      0 |
-| Problemas  |    515 |
-| Segurança  |    415 |
+| Problemas  |    278 |
+| Segurança  |    305 |
 
-|       VERSÃO        | SUPORTE | FIM DO SUPORTE |
-|---------------------|---------|----------------|
-| v1.30.9-gke.1009000 | 🟥      | ---            |
+|        VERSÃO        | SUPORTE | FIM DO SUPORTE |
+|----------------------|---------|----------------|
+| v1.29.12-eks-2d5f260 | 🟥      | ---            |
 
 > Legenda:
 >
@@ -71,9 +71,9 @@
 ### 2.2. Informações de recursos
 | RECURSOS |  CAPACIDADE  | STATUS |
 |----------|--------------|--------|
-| CPU      | 12 cores     | 🟩     |
-| Memória  | 48844568 Gib | 🟩     |
-| PODS     |          660 | 🟩     |
+| CPU      | 22 cores     | 🟩     |
+| Memória  | 87713380 Gib | 🟩     |
+| PODS     |          319 | 🟩     |
 
 > Legenda:
 >
@@ -81,7 +81,7 @@
 ### 2.3. Uso de memória dos nodes
 |  GRUPO  | QUANTIDADE | STATUS |
 |---------|------------|--------|
-| X < 65% |          6 | 🟩     |
+| X < 65% |          8 | 🟩     |
 | X > 65% |          0 | 🟨     |
 | X > 80% |          0 | 🟥     |
 

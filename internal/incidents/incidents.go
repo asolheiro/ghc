@@ -108,3 +108,31 @@ func GetIncidents(token, clusterId string) (Response, error) {
 	}
 	return response, nil
 }
+
+type rawAlertMessage struct {
+    State  string `json:"state"`
+    Reason string `json:"reason"`
+}
+
+// UnmarshalJSON implements custom unmarshaling for AlertMessage
+func (am *AlertMessage) UnmarshalJSON(data []byte) error {
+    // First, try to unmarshal as a string
+    var stringMsg string
+    if err := json.Unmarshal(data, &stringMsg); err == nil {
+        // If successful, treat the string as the message
+        am.State = "unknown"
+        am.Reason = stringMsg
+        return nil
+    }
+
+    // If that fails, try to unmarshal as an object
+    var objMsg rawAlertMessage
+    if err := json.Unmarshal(data, &objMsg); err != nil {
+        return fmt.Errorf("failed to unmarshal AlertMessage: %v", err)
+    }
+
+    // Copy the values from the raw message
+    am.State = objMsg.State
+    am.Reason = objMsg.Reason
+    return nil
+}

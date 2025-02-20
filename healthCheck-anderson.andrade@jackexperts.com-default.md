@@ -1,12 +1,13 @@
 # anderson.andrade@jackexperts.com-default
+
 ## 1. CCO-PRD
 ### 1.1. Informações gerais
 | DESCRIÇÃO  | NÚMERO |
 |------------|--------|
 | Nodes      |      9 |
 | Incidentes |      2 |
-| Problemas  |    447 |
-| Segurança  |    447 |
+| Problemas  |    442 |
+| Segurança  |    443 |
 
 |        VERSÃO        | SUPORTE | FIM DO SUPORTE |
 |----------------------|---------|----------------|
@@ -29,8 +30,8 @@
 |  GRUPO  | QUANTIDADE | STATUS |
 |---------|------------|--------|
 | X < 65% |          5 | 🟩     |
-| X > 65% |          0 | 🟨     |
-| X > 80% |          4 | 🟥     |
+| X > 65% |          2 | 🟨     |
+| X > 80% |          2 | 🟥     |
 
 > Legenda:
 >

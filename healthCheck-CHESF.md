@@ -1,6 +1,59 @@
 # CHESF
 
-## 2. coruscant(Produção)
+## 1. alderaan(homologação)
+### 1.1. Informações gerais
+| DESCRIÇÃO  | NÚMERO |
+|------------|--------|
+| Nodes      |      7 |
+| Incidentes |      0 |
+| Problemas  |    462 |
+| Segurança  |    350 |
+
+|  VERSÃO  | SUPORTE | FIM DO SUPORTE |
+|----------|---------|----------------|
+| v1.24.10 | 🟥      | ---            |
+
+> Legenda:
+>
+> 🟩 - suporte longo; 🟨 - suporte chegando ao fim; 🟥 - fim do suporte eminente.
+### 1.2. Informações de recursos
+| RECURSOS |  CAPACIDADE   | STATUS |
+|----------|---------------|--------|
+| CPU      | 60 cores      | 🟩     |
+| Memória  | 172503464 Gib | 🟨     |
+| PODS     |           770 | 🟩     |
+
+> Legenda:
+>
+> 🟩 - nível recomendado; 🟨 - requer atenção; 🟥 - nível crítico.
+### 1.3. Uso de memória dos nodes
+|  GRUPO  | QUANTIDADE | STATUS |
+|---------|------------|--------|
+| X < 65% |          1 | 🟩     |
+| X > 65% |          5 | 🟨     |
+| X > 80% |          1 | 🟥     |
+
+> Legenda:
+>
+> 🟩 - uso normal; 🟨 - uso grande; 🟥 - uso excessivo.
+### 1.4. Alertas
+|   DATA   | RECURSO NAMESPACE |      NOME       | DESCRIÇÃO  |
+|----------|-------------------|-----------------|------------|
+| 28/11/24 | pvcescrita        | pvc-smb-escrita | pvc is low |
+
+### 1.5. Incidentes
+|   STACK    |    NAMESPACE    | STATUS |
+|------------|-----------------|--------|
+| CerManager | `cert-manager`  | 🟩     |
+| Loki       | `loki`          | 🟩     |
+| Prometheus | `monitoring`    | 🟩     |
+| Rancher    | `cattle-system` | 🟩     |
+| Outros     | --              | 🟩     |
+
+> Legenda:
+>
+> 🟩 - sem incidentes; 🟥 - possui incidentes.
+---## 2. coruscant(Produção)
 ### 2.1. Informações gerais
 | DESCRIÇÃO  | NÚMERO |
 |------------|--------|
@@ -30,8 +83,8 @@
 |  GRUPO  | QUANTIDADE | STATUS |
 |---------|------------|--------|
 | X < 65% |          4 | 🟩     |
-| X > 65% |          5 | 🟨     |
-| X > 80% |          2 | 🟥     |
+| X > 65% |          6 | 🟨     |
+| X > 80% |          1 | 🟥     |
 
 > Legenda:
 >
@@ -53,8 +106,7 @@
 > Legenda:
 >
 > 🟩 - sem incidentes; 🟥 - possui incidentes.
----
-## 3. dagobah(desenvolvimento)
+---## 3. dagobah(desenvolvimento)
 ### 3.1. Informações gerais
 | DESCRIÇÃO  | NÚMERO |
 |------------|--------|
@@ -107,15 +159,14 @@
 > Legenda:
 >
 > 🟩 - sem incidentes; 🟥 - possui incidentes.
----
-## 4. deathstar(windows)
+---## 4. deathstar(windows)
 ### 4.1. Informações gerais
 | DESCRIÇÃO  | NÚMERO |
 |------------|--------|
 | Nodes      |      6 |
 | Incidentes |      7 |
 | Problemas  |    257 |
-| Segurança  |    195 |
+| Segurança  |    205 |
 
 |     VERSÃO      | SUPORTE | FIM DO SUPORTE |
 |-----------------|---------|----------------|
@@ -160,15 +211,14 @@
 > Legenda:
 >
 > 🟩 - sem incidentes; 🟥 - possui incidentes.
----
-## 5. elet-gke-chesf-dev
+---## 5. elet-gke-chesf-dev
 ### 5.1. Informações gerais
 | DESCRIÇÃO  | NÚMERO |
 |------------|--------|
 | Nodes      |      7 |
 | Incidentes |     11 |
-| Problemas  |    543 |
-| Segurança  |    478 |
+| Problemas  |    559 |
+| Segurança  |    497 |
 
 |       VERSÃO        | SUPORTE | FIM DO SUPORTE |
 |---------------------|---------|----------------|
@@ -191,8 +241,8 @@
 |  GRUPO  | QUANTIDADE | STATUS |
 |---------|------------|--------|
 | X < 65% |          3 | 🟩     |
-| X > 65% |          3 | 🟨     |
-| X > 80% |          1 | 🟥     |
+| X > 65% |          2 | 🟨     |
+| X > 80% |          2 | 🟥     |
 
 > Legenda:
 >
@@ -213,8 +263,7 @@
 > Legenda:
 >
 > 🟩 - sem incidentes; 🟥 - possui incidentes.
----
-## 6. elet-gke-chesf-prd
+---## 6. elet-gke-chesf-prd
 ### 6.1. Informações gerais
 | DESCRIÇÃO  | NÚMERO |
 |------------|--------|
@@ -225,7 +274,7 @@
 
 |       VERSÃO        | SUPORTE | FIM DO SUPORTE |
 |---------------------|---------|----------------|
-| v1.30.8-gke.1162001 | 🟥      | ---            |
+| v1.30.8-gke.1261000 | 🟥      | ---            |
 
 > Legenda:
 >
@@ -266,15 +315,14 @@
 > Legenda:
 >
 > 🟩 - sem incidentes; 🟥 - possui incidentes.
----
-## 7. elet-gke-chesf-qld
+---## 7. elet-gke-chesf-qld
 ### 7.1. Informações gerais
 | DESCRIÇÃO  | NÚMERO |
 |------------|--------|
 | Nodes      |      8 |
 | Incidentes |      7 |
-| Problemas  |    489 |
-| Segurança  |    549 |
+| Problemas  |    501 |
+| Segurança  |    569 |
 
 |       VERSÃO        | SUPORTE | FIM DO SUPORTE |
 |---------------------|---------|----------------|
@@ -297,8 +345,8 @@
 |  GRUPO  | QUANTIDADE | STATUS |
 |---------|------------|--------|
 | X < 65% |          5 | 🟩     |
-| X > 65% |          3 | 🟨     |
-| X > 80% |          0 | 🟥     |
+| X > 65% |          2 | 🟨     |
+| X > 80% |          1 | 🟥     |
 
 > Legenda:
 >
@@ -320,9 +368,59 @@
 > Legenda:
 >
 > 🟩 - sem incidentes; 🟥 - possui incidentes.
----
+---## 8. local-on-premise
+### 8.1. Informações gerais
+| DESCRIÇÃO  | NÚMERO |
+|------------|--------|
+| Nodes      |      3 |
+| Incidentes |      0 |
+| Problemas  |    137 |
+| Segurança  |     70 |
 
-## 9. tatooine(dgcti)
+| VERSÃO  | SUPORTE | FIM DO SUPORTE |
+|---------|---------|----------------|
+| v1.24.6 | 🟥      | ---            |
+
+> Legenda:
+>
+> 🟩 - suporte longo; 🟨 - suporte chegando ao fim; 🟥 - fim do suporte eminente.
+### 8.2. Informações de recursos
+| RECURSOS |  CAPACIDADE  | STATUS |
+|----------|--------------|--------|
+| CPU      | 18 cores     | 🟩     |
+| Memória  | 49142800 Gib | 🟥     |
+| PODS     |          330 | 🟩     |
+
+> Legenda:
+>
+> 🟩 - nível recomendado; 🟨 - requer atenção; 🟥 - nível crítico.
+### 8.3. Uso de memória dos nodes
+|  GRUPO  | QUANTIDADE | STATUS |
+|---------|------------|--------|
+| X < 65% |          0 | 🟩     |
+| X > 65% |          1 | 🟨     |
+| X > 80% |          2 | 🟥     |
+
+> Legenda:
+>
+> 🟩 - uso normal; 🟨 - uso grande; 🟥 - uso excessivo.
+### 8.4. Alertas
+| DATA | RECURSO NAMESPACE | NOME | DESCRIÇÃO |
+|------|-------------------|------|-----------|
+
+### 8.5. Incidentes
+|   STACK    |    NAMESPACE    | STATUS |
+|------------|-----------------|--------|
+| CerManager | `cert-manager`  | 🟩     |
+| Loki       | `loki`          | 🟩     |
+| Prometheus | `monitoring`    | 🟩     |
+| Rancher    | `cattle-system` | 🟩     |
+| Outros     | --              | 🟩     |
+
+> Legenda:
+>
+> 🟩 - sem incidentes; 🟥 - possui incidentes.
+---## 9. tatooine(dgcti)
 ### 9.1. Informações gerais
 | DESCRIÇÃO  | NÚMERO |
 |------------|--------|
