@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 
-
 	"github.com/asolheiro/gita-healthcheck/internal/alerts"
 	"github.com/asolheiro/gita-healthcheck/internal/auth"
 	"github.com/asolheiro/gita-healthcheck/internal/count"
@@ -14,6 +13,7 @@ import (
 	"github.com/asolheiro/gita-healthcheck/internal/metrics"
 	"github.com/asolheiro/gita-healthcheck/internal/problem"
 	"github.com/asolheiro/gita-healthcheck/internal/security"
+	"github.com/asolheiro/gita-healthcheck/internal/version"
 	"github.com/spf13/cobra"
 )
 
@@ -32,14 +32,12 @@ var generateMdCmd = &cobra.Command{
             fmt.Printf("\nGenerating report for organization: %s\n", msgCount.Organization.Name)
             fmt.Printf("Ω Total clusters found: %d\n", len(msgCount.Clusters))
             
-            // Print all clusters first to verify the data
             for i, cluster := range msgCount.Clusters {
                 fmt.Printf("  Δ Cluster %d: %s (ID: %s)\n", i+1, cluster.Name, cluster.ClusterID)
             }
             
             mainFile := fmt.Sprintf("./reports/healthCheck-%s.md", msgCount.Organization.Name)
             
-            // Create the file with write permissions
             f1, err := os.OpenFile(mainFile, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
             if err != nil {
                 log.Fatalf("Error creating main file: %v", err)
@@ -78,6 +76,11 @@ var generateMdCmd = &cobra.Command{
                 if err != nil {
                     log.Fatal(err)
                 }
+
+                kubernetesInfo, err := version.GatherKubernetesInfo(cluster.KubernetesVersion)
+                if err != nil {
+                    log.Fatal(err)
+                }
                 
                 fileVars := md.FileVars{
                     Index:          i + 1,
@@ -90,6 +93,7 @@ var generateMdCmd = &cobra.Command{
                     ClusterMetrics: clusterMetrics,
                     NodeMetrics:    nodeMetrics,
                     AlertsList:     alertsList,
+                    KubernetesInfo: kubernetesInfo,
                 }
 
                 tmpFile := fmt.Sprintf("%d-gita-report-%s.md", i+1, cluster.Name)
