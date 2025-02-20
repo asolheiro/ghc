@@ -51,6 +51,8 @@
 			},
 		})
 
+		m.PlainTextf("\n")
+
 		m.Table(md.TableSet{
 			Header: []string{"Versão", "Suporte", "Fim do suporte"},
 			Rows: [][]string{
@@ -60,17 +62,21 @@
 
 		m.PlainText("> Legenda:\n>\n> 🟩 - suporte longo; 🟨 - suporte chegando ao fim; 🟥 - fim do suporte eminente.")
 
+		m.PlainTextf("\n")
+
 		m.H3(fmt.Sprintf("%d.2. Informações de recursos", args.Index))
 		m.Table(md.TableSet{
 			Header: []string{"Recursos", "Capacidade", "Status"},
 			Rows: [][]string{
 				{"CPU", fmt.Sprintf("%d cores", args.ClusterMetrics.TotalCPU), colorRuleResources(args.ClusterMetrics, "CPU")},
-				{"Memória", fmt.Sprintf("%d Gib", args.ClusterMetrics.TotalMemory), colorRuleResources(args.ClusterMetrics, "MEM")},
+				{"Memória", fmt.Sprintf("%.2f Gib", mapTotalMemorytoGib(args.ClusterMetrics.TotalMemory)), colorRuleResources(args.ClusterMetrics, "MEM")},
 				{"PODS", fmt.Sprintf("%d", args.ClusterMetrics.TotalPodCapacity), colorRuleResources(args.ClusterMetrics, "POD")},
 			},
 		})
 
 		m.PlainText("> Legenda:\n>\n> 🟩 - nível recomendado; 🟨 - requer atenção; 🟥 - nível crítico.")
+
+		m.PlainTextf("\n")
 
 		m.H3(fmt.Sprintf("%d.3. Uso de memória dos nodes", args.Index))
 
@@ -97,23 +103,27 @@
 
 		m.PlainText("> Legenda:\n>\n> 🟩 - uso normal; 🟨 - uso grande; 🟥 - uso excessivo.")
 
+		m.PlainTextf("\n")
+
 		m.H3(fmt.Sprintf("%d.4. Alertas", args.Index))
 
 		alerts := make([][]string, len(args.AlertsList))
 		for i, alert := range args.AlertsList {
 			alerts[i] = []string{
 				alert.DataHora.Date.Format("02/01/06"),
-				alert.Kind + alert.Namespace,
+				alert.Kind + "\\" + alert.Namespace,
 				alert.Name,
 				alert.Msg,
 			}
 		}
 
 		m.Table(md.TableSet{
-			Header: []string{"Data", "Recurso.Namespace", "Nome", "Descrição"},
+			Header: []string{"Data", "`Recurso\\Namespace`", "Nome", "Descrição"},
 			Rows:   alerts,
 		},
 		)
+
+		m.PlainTextf("\n")
 
 		m.H3(fmt.Sprintf("%d.5. Incidentes", args.Index))
 
@@ -156,6 +166,7 @@
 		m.PlainText("> Legenda:\n>\n> 🟩 - sem incidentes; 🟥 - possui incidentes.")
 
 		m.HorizontalRule()
+		m.PlainTextf("\n")
 		m.Build()
 	}
 
@@ -173,7 +184,7 @@
 			per100 := (cm.TotalPods / cm.TotalPodCapacity) * 100
 			if per100 < 65.00 {
 				return fmt.Sprintf("🟩")
-			} else if per100 >= 65.00 && per100 < 80.00 {
+			} else if per100 >= 60.00 && per100 < 80.00 {
 				return fmt.Sprintf("🟨")
 			} else {
 				return fmt.Sprintf("🟥")
@@ -198,3 +209,9 @@
 			return ""
 		}
 	}
+
+func mapTotalMemorytoGib (mem int) (float64) {
+	memGib := float64(mem) / 1024
+	memGib = memGib / 1024
+	return memGib
+}
