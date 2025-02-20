@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/asolheiro/gita-healthcheck/internal/alerts"
 	"github.com/asolheiro/gita-healthcheck/internal/auth"
@@ -44,7 +45,8 @@ var generateMdCmd = &cobra.Command{
             }
             defer f1.Close()
 
-            orgHeader := fmt.Sprintf("# %s\n\n", msgCount.Organization.Name)
+
+            orgHeader := fmt.Sprintf("# %s - %s\n\n", msgCount.Organization.Name, timeNowToFormattedDate())
             if _, err := f1.WriteString(orgHeader); err != nil {
                 log.Fatalf("Error writing org header: %v", err)
             }
@@ -120,4 +122,24 @@ var generateMdCmd = &cobra.Command{
             }
         }
     },
+}
+
+func timeNowToFormattedDate() string{
+    monthMap := map[time.Month]string{
+		time.January:   "Janeiro",
+		time.February:  "Fevereiro",
+		time.March:     "Março",
+		time.April:     "Abril",
+		time.May:       "Maio",
+		time.June:      "Junho",
+		time.July:      "Julho",
+		time.August:    "Agosto",
+		time.September: "Setembro",
+		time.October:   "Outubro",
+		time.November:  "Novembro",
+		time.December:  "Dezembro",
+	}
+
+    now := time.Now()
+    return fmt.Sprintf("%d de %s de %d", now.Day(), monthMap[now.Month()], now.Year())
 }
