@@ -27,4 +27,4 @@ go.work.sum
 
 # generated reports
 reports/
-healthCheck-*.md
+healthCheck-*
