@@ -1,6 +1,9 @@
 variables:
   REPO_NAME: gita-healthcheck-generator
-  VERSION: 1.0.0 
+  VERSION: ${CI_COMMIT_TAG}
+  PACKAGE_NAME: ${REPO_NAME}
+  PACKAGE_REGISTRY_URL: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${VERSION}"
+
 .platforms:
   PLATFORMS:
     - GOOS: linux
@@ -16,6 +19,7 @@ variables:
 
 stages:
   - build
+  - upload
   - release
 
 build:
@@ -32,13 +36,13 @@ build:
         
         # Set binary name based on platform
         if [ "$GOOS" = "windows" ]; then
-          binary_name="${REPO_NAME}-${CI_COMMIT_TAG}-${GOOS}-${GOARCH}.exe"
+          binary_name="${REPO_NAME}-${VERSION}-${GOOS}-${GOARCH}.exe"
         else
-          binary_name="${REPO_NAME}-${CI_COMMIT_TAG}-${GOOS}-${GOARCH}"
+          binary_name="${REPO_NAME}-${VERSION}-${GOOS}-${GOARCH}"
         fi
         
         echo "Building for $GOOS/$GOARCH..."
-        CGO_ENABLED=0 go build -o "dist/${binary_name}" -ldflags="-X 'main.Version=${CI_COMMIT_TAG}'" ./main.go
+        CGO_ENABLED=0 go build -o "dist/${binary_name}" -ldflags="-X 'main.Version=${VERSION}'" ./main.go
         
         # Create checksum
         cd dist && sha256sum "${binary_name}" > "${binary_name}.sha256" && cd ..
@@ -47,25 +51,41 @@ build:
     paths:
       - dist/
 
-release:
-  stage: release
-  image: registry.gitlab.com/gitlab-org/release-cli:latest
+upload:
+  stage: upload
   rules:
     - if: $CI_COMMIT_TAG
   dependencies:
     - build
   script:
     - |
+      for file in dist/*; do
+        filename=$(basename $file)
+        echo "Uploading $filename to Package Registry..."
+        curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" \
+          --upload-file $file \
+          "${PACKAGE_REGISTRY_URL}/${filename}"
+      done
+
+release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  rules:
+    - if: $CI_COMMIT_TAG
+  needs:
+    - upload
+  script:
+    - |
+      # Prepare assets links for all files
       assets_links=""
       for file in dist/*; do
         filename=$(basename $file)
-        assets_links="$assets_links --assets-link={\"name\":\"$filename\",\"url\":\"$CI_PROJECT_URL/-/jobs/$CI_JOB_ID/artifacts/raw/dist/$filename\"}"
+        assets_links="$assets_links --assets-link={\"name\":\"$filename\",\"url\":\"${PACKAGE_REGISTRY_URL}/${filename}\"}"
       done
       
+      # Create release with all assets
       release-cli create \
-        --name "Release $CI_COMMIT_TAG" \
+        --name "Release ${VERSION}" \
         --tag-name $CI_COMMIT_TAG \
-        --description "Release $CI_COMMIT_TAG" \
-        --ref $CI_COMMIT_SHA \
-        $assets_links \
-        --released-at "$(date --iso-8601=seconds)"
+        --description "Release ${VERSION}" \
+        $assets_links
