@@ -39,6 +39,7 @@ var generateMdCmd = &cobra.Command{
             
             mainFile := fmt.Sprintf("healthCheck-%s.md", msgCount.Organization.Name)
             
+            
             f1, err := os.OpenFile(mainFile, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
             if err != nil {
                 log.Fatalf("Error creating main file: %v", err)
