@@ -1,0 +1,61 @@
+variables:
+  REPO_NAME: gita-healthcheck
+  VERSION: 1.0.0  
+
+.platforms:
+  PLATFORMS:
+    - GOOS: linux
+      GOARCH: amd64
+    - GOOS: linux
+      GOARCH: arm64
+    - GOOS: windows
+      GOARCH: amd64
+    - GOOS: darwin
+      GOARCH: amd64
+    - GOOS: darwin
+      GOARCH: arm64
+
+stages:
+  - build
+  - release
+
+
+build:
+  stage: build
+  image: golang:latest
+  rules:
+    - if: $CI_COMMIT_TAG
+  script:
+    - |
+      for platform in $(echo "$PLATFORMS" | jq -c '.[]'); do
+        export GOOS=$(echo $platform | jq -r '.GOOS')
+        export GOARCH=$(echo $platform | jq -r '.GOARCH')
+        
+        # Set binary name based on platform
+        if [ "$GOOS" = "windows" ]; then
+          binary_name="${REPO_NAME}-${GOOS}-${GOARCH}.exe"
+        else
+          binary_name="${REPO_NAME}-${GOOS}-${GOARCH}"
+        fi
+        
+        echo "Building for $GOOS/$GOARCH..."
+        CGO_ENABLED=0 go build -o "dist/${binary_name}" -ldflags="-X 'main.Version=${VERSION}'" ./main.go
+        
+        # Create checksum
+        cd dist && sha256sum "${binary_name}" > "${binary_name}.sha256" && cd ..
+      done
+  artifacts:
+    paths:
+      - dist/
+
+release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  rules:
+    - if: $CI_COMMIT_TAG
+  script:
+    - |
+      release-cli create --name "Release $CI_COMMIT_TAG" \
+        --tag-name $CI_COMMIT_TAG \
+        --description "Release $CI_COMMIT_TAG" \
+        $(for file in dist/*; do echo "--assets-link={\"name\":\"$(basename $file)\",\"url\":\"${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/raw/dist/$(basename $file)\"}"; done)
