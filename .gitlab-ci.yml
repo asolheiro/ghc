@@ -19,22 +19,28 @@ build:
     # Linux AMD64
     - GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o "dist/${REPO_NAME}-${VERSION}-linux-amd64" -ldflags="-X 'main.Version=${VERSION}'" ./main.go
     - cd dist && sha256sum "${REPO_NAME}-${VERSION}-linux-amd64" > "${REPO_NAME}-${VERSION}-linux-amd64.sha256" && cd ..
+    - echo DONE
     
     # Linux ARM64
     - GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -o "dist/${REPO_NAME}-${VERSION}-linux-arm64" -ldflags="-X 'main.Version=${VERSION}'" ./main.go
     - cd dist && sha256sum "${REPO_NAME}-${VERSION}-linux-arm64" > "${REPO_NAME}-${VERSION}-linux-arm64.sha256" && cd ..
-    
+    - echo DONE
+
     # Windows AMD64
     - GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -o "dist/${REPO_NAME}-${VERSION}-windows-amd64.exe" -ldflags="-X 'main.Version=${VERSION}'" ./main.go
     - cd dist && sha256sum "${REPO_NAME}-${VERSION}-windows-amd64.exe" > "${REPO_NAME}-${VERSION}-windows-amd64.exe.sha256" && cd ..
-    
+    - echo DONE
+
     # Darwin (macOS) AMD64
     - GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 go build -o "dist/${REPO_NAME}-${VERSION}-darwin-amd64" -ldflags="-X 'main.Version=${VERSION}'" ./main.go
     - cd dist && sha256sum "${REPO_NAME}-${VERSION}-darwin-amd64" > "${REPO_NAME}-${VERSION}-darwin-amd64.sha256" && cd ..
-    
+    - echo DONE
+
     # Darwin (macOS) ARM64
     - GOOS=darwin GOARCH=arm64 CGO_ENABLED=0 go build -o "dist/${REPO_NAME}-${VERSION}-darwin-arm64" -ldflags="-X 'main.Version=${VERSION}'" ./main.go
     - cd dist && sha256sum "${REPO_NAME}-${VERSION}-darwin-arm64" > "${REPO_NAME}-${VERSION}-darwin-arm64.sha256" && cd ..
+    - echo DONE
+    
   artifacts:
     paths:
       - dist/
