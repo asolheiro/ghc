@@ -28,13 +28,13 @@ build:
     - GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -o "dist/${REPO_NAME}-${VERSION}-windows-amd64.exe" -ldflags="-X 'main.Version=${VERSION}'" ./main.go
     - cd dist && sha256sum "${REPO_NAME}-${VERSION}-windows-amd64.exe" > "${REPO_NAME}-${VERSION}-windows-amd64.exe.sha256" && cd ..
     
-    # Darwin (macOS) AMD64
-    - GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 go build -o "dist/${REPO_NAME}-${VERSION}-darwin-amd64" -ldflags="-X 'main.Version=${VERSION}'" ./main.go
-    - cd dist && sha256sum "${REPO_NAME}-${VERSION}-darwin-amd64" > "${REPO_NAME}-${VERSION}-darwin-amd64.sha256" && cd ..
+    # # Darwin (macOS) AMD64
+    # - GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 go build -o "dist/${REPO_NAME}-${VERSION}-darwin-amd64" -ldflags="-X 'main.Version=${VERSION}'" ./main.go
+    # - cd dist && sha256sum "${REPO_NAME}-${VERSION}-darwin-amd64" > "${REPO_NAME}-${VERSION}-darwin-amd64.sha256" && cd ..
     
-    # Darwin (macOS) ARM64
-    - GOOS=darwin GOARCH=arm64 CGO_ENABLED=0 go build -o "dist/${REPO_NAME}-${VERSION}-darwin-arm64" -ldflags="-X 'main.Version=${VERSION}'" ./main.go
-    - cd dist && sha256sum "${REPO_NAME}-${VERSION}-darwin-arm64" > "${REPO_NAME}-${VERSION}-darwin-arm64.sha256" && cd ..
+    # # Darwin (macOS) ARM64
+    # - GOOS=darwin GOARCH=arm64 CGO_ENABLED=0 go build -o "dist/${REPO_NAME}-${VERSION}-darwin-arm64" -ldflags="-X 'main.Version=${VERSION}'" ./main.go
+    # - cd dist && sha256sum "${REPO_NAME}-${VERSION}-darwin-arm64" > "${REPO_NAME}-${VERSION}-darwin-arm64.sha256" && cd ..
   artifacts:
     paths:
       - dist/
@@ -81,13 +81,13 @@ release:
       assets_links="$assets_links --assets-link={\"name\":\"${REPO_NAME}-${VERSION}-windows-amd64.exe\",\"url\":\"${PACKAGE_REGISTRY_URL}/${REPO_NAME}-${VERSION}-windows-amd64.exe\"}"
       assets_links="$assets_links --assets-link={\"name\":\"${REPO_NAME}-${VERSION}-windows-amd64.exe.sha256\",\"url\":\"${PACKAGE_REGISTRY_URL}/${REPO_NAME}-${VERSION}-windows-amd64.exe.sha256\"}"
       
-      # Darwin AMD64
-      assets_links="$assets_links --assets-link={\"name\":\"${REPO_NAME}-${VERSION}-darwin-amd64\",\"url\":\"${PACKAGE_REGISTRY_URL}/${REPO_NAME}-${VERSION}-darwin-amd64\"}"
-      assets_links="$assets_links --assets-link={\"name\":\"${REPO_NAME}-${VERSION}-darwin-amd64.sha256\",\"url\":\"${PACKAGE_REGISTRY_URL}/${REPO_NAME}-${VERSION}-darwin-amd64.sha256\"}"
+      # # Darwin AMD64
+      # assets_links="$assets_links --assets-link={\"name\":\"${REPO_NAME}-${VERSION}-darwin-amd64\",\"url\":\"${PACKAGE_REGISTRY_URL}/${REPO_NAME}-${VERSION}-darwin-amd64\"}"
+      # assets_links="$assets_links --assets-link={\"name\":\"${REPO_NAME}-${VERSION}-darwin-amd64.sha256\",\"url\":\"${PACKAGE_REGISTRY_URL}/${REPO_NAME}-${VERSION}-darwin-amd64.sha256\"}"
       
-      # Darwin ARM64
-      assets_links="$assets_links --assets-link={\"name\":\"${REPO_NAME}-${VERSION}-darwin-arm64\",\"url\":\"${PACKAGE_REGISTRY_URL}/${REPO_NAME}-${VERSION}-darwin-arm64\"}"
-      assets_links="$assets_links --assets-link={\"name\":\"${REPO_NAME}-${VERSION}-darwin-arm64.sha256\",\"url\":\"${PACKAGE_REGISTRY_URL}/${REPO_NAME}-${VERSION}-darwin-arm64.sha256\"}"
+      # # Darwin ARM64
+      # assets_links="$assets_links --assets-link={\"name\":\"${REPO_NAME}-${VERSION}-darwin-arm64\",\"url\":\"${PACKAGE_REGISTRY_URL}/${REPO_NAME}-${VERSION}-darwin-arm64\"}"
+      # assets_links="$assets_links --assets-link={\"name\":\"${REPO_NAME}-${VERSION}-darwin-arm64.sha256\",\"url\":\"${PACKAGE_REGISTRY_URL}/${REPO_NAME}-${VERSION}-darwin-arm64.sha256\"}"
       
       # Create release with all assets
       release-cli create \
