@@ -37,7 +37,6 @@ var generateMdCmd = &cobra.Command{
 				fmt.Printf("  Δ Cluster %d: %s (ID: %s)\n", i+1, cluster.Name, cluster.ClusterID)
 			}
 
-			// Create the 'reports/' directory if it doesn't exist
 			path := "reports"
 			_ = os.Mkdir(path, os.ModePerm)
 			mainFile := fmt.Sprintf(path+"/%s.md", msgCount.Organization.Name)
