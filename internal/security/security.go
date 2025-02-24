@@ -8,7 +8,6 @@ import (
 	"time"
 
 	httputils "github.com/asolheiro/gita-healthcheck/internal/http_utils"
-
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 

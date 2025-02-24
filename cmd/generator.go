@@ -6,15 +6,10 @@ import (
 	"os"
 	"time"
 
-	"github.com/asolheiro/gita-healthcheck/internal/alerts"
+
 	"github.com/asolheiro/gita-healthcheck/internal/auth"
 	"github.com/asolheiro/gita-healthcheck/internal/count"
-	"github.com/asolheiro/gita-healthcheck/internal/incidents"
 	"github.com/asolheiro/gita-healthcheck/internal/md"
-	"github.com/asolheiro/gita-healthcheck/internal/metrics"
-	"github.com/asolheiro/gita-healthcheck/internal/problem"
-	"github.com/asolheiro/gita-healthcheck/internal/security"
-	"github.com/asolheiro/gita-healthcheck/internal/version"
 	"github.com/spf13/cobra"
 )
 
@@ -54,51 +49,7 @@ var generateMdCmd = &cobra.Command{
 			}
 
 			for i, cluster := range msgCount.Clusters {
-				fmt.Printf("    σ Processing cluster %d/%d: %s\n", i+1, len(msgCount.Clusters), cluster.Name)
-
-				incidents, err := incidents.GetIncidents(authResponse.AccessToken, cluster.ClusterID)
-				if err != nil {
-					log.Fatal(err)
-				}
-				problem, err := problem.GetProblems(authResponse.AccessToken, cluster.ClusterID)
-				if err != nil {
-					log.Fatal(err)
-				}
-				security, err := security.GetSecurity(authResponse.AccessToken, cluster.ClusterID)
-				if err != nil {
-					log.Fatal(err)
-				}
-				clusterMetrics, err := metrics.GetClusterMetrics(authResponse.AccessToken, cluster.ClusterID)
-				if err != nil {
-					log.Fatal(err)
-				}
-				nodeMetrics, err := metrics.GetNodeMetrics(authResponse.AccessToken, cluster.ClusterID)
-				if err != nil {
-					log.Fatal(err)
-				}
-				alertsList, err := alerts.GetAlerts(authResponse.AccessToken, cluster.ClusterID)
-				if err != nil {
-					log.Fatal(err)
-				}
-
-				kubernetesInfo, err := version.GatherKubernetesInfo(cluster.KubernetesVersion)
-				if err != nil {
-					log.Fatal(err)
-				}
-
-				fileVars := md.FileVars{
-					Index:          i + 1,
-					Auth:           *authResponse,
-					OrgName:        msgCount.Organization.Name,
-					Cluster:        cluster,
-					Incidents:      incidents,
-					Problem:        problem,
-					Security:       security,
-					ClusterMetrics: clusterMetrics,
-					NodeMetrics:    nodeMetrics,
-					AlertsList:     alertsList,
-					KubernetesInfo: kubernetesInfo,
-				}
+				fileVars := md.FindInfo(authResponse, msgCount, i, cluster)
 
 				tmpFile := fmt.Sprintf("%d-gita-report-%s.md", i+1, cluster.Name)
 				md.GenerateFile(fileVars)
