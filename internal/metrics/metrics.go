@@ -66,6 +66,11 @@ func GetClusterMetrics(token, clusterId string) (TotalMetrics, error) {
 		return TotalMetrics{}, nil
 	}
 
+	if string(body) == "[]" {
+		return TotalMetrics{}, nil
+	}
+		
+	
 	var response Response
 	if err := json.NewDecoder(bytes.NewReader(body)).Decode(&response); err != nil {
 		return TotalMetrics{}, fmt.Errorf("error deconding JSON response, err: %s", err)
@@ -86,6 +91,10 @@ func GetNodeMetrics(token, clusterId string) ([]TotalNodeMetrics, error) {
 
 	if err != nil {
 		return nil, nil
+	}
+
+	if string(body) == "[]" {
+		return []TotalNodeMetrics{}, nil
 	}
 
 	var response Response
@@ -121,11 +130,18 @@ func calculateTotalMetrics(response Response) TotalMetrics {
 		total.TotalPods += node.PodsWithIP + node.PodsWithoutIP
 	}
 
+	// Handle division by zero for CPU percentage
 	if total.TotalCPU > 0 {
 		total.CPUUsePercentage = math.Round((float64(total.TotalInUseCPU)/float64(total.TotalCPU*1e9))*100*100) / 100
+	} else {
+		total.CPUUsePercentage = 0
 	}
+	
+	// Handle division by zero for memory percentage
 	if total.TotalMemory > 0 {
 		total.MemoryUsePercentage = math.Round((float64(total.TotalInUseMemory)/float64(total.TotalMemory))*100*100) / 100
+	} else {
+		total.MemoryUsePercentage = 0
 	}
 
 	return total
@@ -149,11 +165,18 @@ func calculateNodeMetrics(node Node) TotalNodeMetrics {
 		TotalPods:        node.PodsWithIP + node.PodsWithoutIP,
 	}
 
+	// Handle division by zero for CPU percentage
 	if nodeMetrics.TotalCPU > 0 {
 		nodeMetrics.CPUUsePercentage = math.Round((float64(nodeMetrics.TotalInUseCPU)/float64(nodeMetrics.TotalCPU*1e9))*100*100) / 100
+	} else {
+		nodeMetrics.CPUUsePercentage = 0
 	}
+	
+	// Handle division by zero for memory percentage
 	if nodeMetrics.TotalMemory > 0 {
 		nodeMetrics.MemoryUsePercentage = math.Round((float64(nodeMetrics.TotalInUseMemory)/float64(nodeMetrics.TotalMemory))*100*100) / 100
+	} else {
+		nodeMetrics.MemoryUsePercentage = 0
 	}
 
 	return nodeMetrics

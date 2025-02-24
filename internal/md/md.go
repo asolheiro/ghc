@@ -195,38 +195,42 @@ func GenerateFile(args FileVars) {
 
 func colorRuleIncident(i int) string {
 	if i > 0 {
-		return fmt.Sprint("🟥")
+		return "🟥"
 	} else {
-		return fmt.Sprint("🟩")
+		return "🟩"
 	}
 }
 
 func colorRuleResources(cm metrics.TotalMetrics, rss string) string {
 	switch rss {
 	case "POD":
+		if cm.TotalPodCapacity == 0 {
+			return "🟥"
+		}
+		
 		per100 := (cm.TotalPods / cm.TotalPodCapacity) * 100
 		if per100 < 65.00 {
-			return fmt.Sprintf("🟩")
+			return "🟩"
 		} else if per100 >= 60.00 && per100 < 80.00 {
-			return fmt.Sprintf("🟨")
+			return "🟨"
 		} else {
-			return fmt.Sprintf("🟥")
+			return "🟥"
 		}
 	case "CPU":
 		if cm.CPUUsePercentage < 65.00 {
-			return fmt.Sprintf("🟩")
+			return "🟩"
 		} else if cm.CPUUsePercentage >= 65.00 && cm.CPUUsePercentage < 80.00 {
-			return fmt.Sprintf("🟨")
+			return "🟨"
 		} else {
-			return fmt.Sprintf("🟥")
+			return "🟥"
 		}
 	case "MEM":
 		if cm.MemoryUsePercentage < 65.00 {
-			return fmt.Sprintf("🟩")
+			return "🟩"
 		} else if cm.MemoryUsePercentage >= 65.00 && cm.MemoryUsePercentage < 80.00 {
-			return fmt.Sprintf("🟨")
+			return "🟨"
 		} else {
-			return fmt.Sprintf("🟥")
+			return "🟥"
 		}
 	default:
 		return ""

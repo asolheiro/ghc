@@ -22,6 +22,7 @@ var generateMdCmd = &cobra.Command{
 	Use:   "generate-md",
 	Short: "Generate a markdown file with a simple report of Gita's plataform",
 	Run: func(cmd *cobra.Command, args []string) {
+		t1 := time.Now()
 		authResponse, err := auth.Authentication()
 		if err != nil {
 			log.Fatal(err)
@@ -122,6 +123,9 @@ var generateMdCmd = &cobra.Command{
 				fmt.Printf("    Σ Finished processing cluster %d: %s\n", i+1, cluster.Name)
 			}
 		}
+		t2 := time.Now()
+		delta := t2.Sub(t1)
+		fmt.Println(delta)
 	},
 }
 

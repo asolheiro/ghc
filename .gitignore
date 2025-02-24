@@ -28,3 +28,5 @@ go.work.sum
 # generated reports
 reports/
 healthCheck-*
+
+article.md
