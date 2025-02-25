@@ -6,7 +6,6 @@ import (
 	"os"
 	"time"
 
-
 	"github.com/asolheiro/gita-healthcheck/internal/auth"
 	"github.com/asolheiro/gita-healthcheck/internal/count"
 	"github.com/asolheiro/gita-healthcheck/internal/md"
@@ -17,7 +16,6 @@ var generateMdCmd = &cobra.Command{
 	Use:   "generate-md",
 	Short: "Generate a markdown file with a simple report of Gita's plataform",
 	Run: func(cmd *cobra.Command, args []string) {
-		t1 := time.Now()
 		authResponse, err := auth.Authentication()
 		if err != nil {
 			log.Fatal(err)
@@ -49,10 +47,25 @@ var generateMdCmd = &cobra.Command{
 			}
 
 			for i, cluster := range msgCount.Clusters {
-				fileVars := md.FindInfo(authResponse, msgCount, i, cluster)
+				
+				var fileVars md.FileVars
+				done := make(chan struct{})
+				go func() {
+					fileVars = md.FindInfo(authResponse, msgCount, i, cluster)
+					close(done)
+				}()
+
+				<-done
 
 				tmpFile := fmt.Sprintf("%d-gita-report-%s.md", i+1, cluster.Name)
-				md.GenerateFile(fileVars)
+				
+				done = make(chan struct{})
+				go func() {
+					md.GenerateFile(fileVars)
+					close(done)
+				}()
+				
+				<-done
 
 				tmpContent, err := os.ReadFile(tmpFile)
 				if err != nil {
@@ -73,10 +86,8 @@ var generateMdCmd = &cobra.Command{
 
 				fmt.Printf("    Σ Finished processing cluster %d: %s\n", i+1, cluster.Name)
 			}
+
 		}
-		t2 := time.Now()
-		delta := t2.Sub(t1)
-		fmt.Println(delta)
 	},
 }
 

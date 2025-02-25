@@ -33,7 +33,6 @@ func FindInfo(auth *auth.AuthResponse, msgCount count.Msg, i int, cluster count.
 		incidentsCh <- incidents
 	}()
 
-	
 	problemCh := make(chan problem.Response, 1)
 	problemErrCh := make(chan error, 1)
 	go func() {
@@ -46,7 +45,6 @@ func FindInfo(auth *auth.AuthResponse, msgCount count.Msg, i int, cluster count.
 		problemCh <- problems
 	}()
 
-
 	securityCh := make(chan security.Response, 1)
 	securityErrCh := make(chan error, 1)
 	go func() {
@@ -58,8 +56,6 @@ func FindInfo(auth *auth.AuthResponse, msgCount count.Msg, i int, cluster count.
 		}
 		securityCh <- sec
 	}()
-
-
 
 	clusterMetricsCh := make(chan metrics.TotalMetrics, 1)
 	clusterMetricsErrCh := make(chan error, 1)
@@ -85,8 +81,6 @@ func FindInfo(auth *auth.AuthResponse, msgCount count.Msg, i int, cluster count.
 		nodeMetricsCh <- metrics
 	}()
 
-
-
 	alertsCh := make(chan []alerts.Msg, 1)
 	alertsErrCh := make(chan error, 1)
 	go func() {
@@ -98,9 +92,6 @@ func FindInfo(auth *auth.AuthResponse, msgCount count.Msg, i int, cluster count.
 		}
 		alertsCh <- alertsList
 	}()
-
-
-
 
 	k8sInfoCh := make(chan version.KubernetesVersionResponse, 1)
 	k8sInfoErrCh := make(chan error, 1)
