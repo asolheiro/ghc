@@ -179,6 +179,7 @@ func GenerateFile(args FileVars) {
 		Header: []string{"Stack", "Namespace", "Status"},
 		Rows: [][]string{
 			{"CerManager", "`cert-manager`", colorRuleIncident(certManager)},
+			{"GITA", "`gita`", colorRuleIncident(gita)},
 			{"Loki", "`loki`", colorRuleIncident(loki)},
 			{"Prometheus", "`monitoring`", colorRuleIncident(monitoring)},
 			{"Rancher", "`cattle-system`", colorRuleIncident(cattleSystem)},
