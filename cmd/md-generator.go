@@ -19,8 +19,6 @@ func init() {
 	generateMdCmd.Flags().StringVarP(&orgFilter, "org", "o", "", "Filter report to specific organization name")
 }
 
-
-var orgFilter string
 var generateMdCmd = &cobra.Command{
 	Use:   "generate-md",
 	Short: "Generate a markdown file with a simple report of Gita's plataform",

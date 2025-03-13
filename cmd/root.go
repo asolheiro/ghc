@@ -26,6 +26,7 @@ in the cost of a few lines in CLI
 	rootCmd.AddCommand(
 		printHcCmd,
 		generateMdCmd,
+		generatePdfCmd,
 	)
 
 	return rootCmd
