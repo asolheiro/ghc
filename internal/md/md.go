@@ -8,6 +8,7 @@ import (
 	"github.com/asolheiro/gita-healthcheck/internal/auth"
 	"github.com/asolheiro/gita-healthcheck/internal/count"
 	"github.com/asolheiro/gita-healthcheck/internal/incidents"
+	"github.com/asolheiro/gita-healthcheck/internal/maps"
 	"github.com/asolheiro/gita-healthcheck/internal/metrics"
 	"github.com/asolheiro/gita-healthcheck/internal/problem"
 	"github.com/asolheiro/gita-healthcheck/internal/security"
@@ -40,7 +41,10 @@ func GenerateFile(args FileVars) {
 	m := md.NewMarkdown(f)
 
 	m.H2(fmt.Sprintf("%d. %s", args.Index, args.Cluster.Name))
+	m.PlainTextf("")
+
 	m.H3(fmt.Sprintf("%d.1. Informações gerais", args.Index))
+	m.PlainTextf("")
 
 	m.Table(md.TableSet{
 		Header: []string{"Descrição", "Número"},
@@ -52,7 +56,8 @@ func GenerateFile(args FileVars) {
 		},
 	})
 
-	m.PlainTextf("\n")
+	m.H3(fmt.Sprintf("%d.2. Versão do Kubernetes", args.Index))
+	m.PlainTextf("")
 
 	k8sInfo := []string{
 		args.KubernetesInfo.Version,
@@ -69,23 +74,25 @@ func GenerateFile(args FileVars) {
 
 	m.PlainText("> Legenda:\n>\n> 🟩 - LTS; 🟨 - menos de 90 dias restantes; 🟧 - menos de 30 dias restantes 🟥 - desatualizado.")
 
-	m.PlainTextf("\n")
+	m.PlainTextf("")
 
-	m.H3(fmt.Sprintf("%d.2. Informações de recursos", args.Index))
+	m.H3(fmt.Sprintf("%d.3. Informações de recursos", args.Index))
+	m.PlainTextf("")
+
 	m.Table(md.TableSet{
 		Header: []string{"Recursos", "Capacidade", "Status"},
 		Rows: [][]string{
 			{"CPU", fmt.Sprintf("%d cores", args.ClusterMetrics.TotalCPU), colorRuleResources(args.ClusterMetrics, "CPU")},
-			{"Memória", fmt.Sprintf("%.2f Gib", mapTotalMemorytoGib(args.ClusterMetrics.TotalMemory)), colorRuleResources(args.ClusterMetrics, "MEM")},
+			{"Memória", fmt.Sprintf("%.2f Gib", maps.TotalMemoryToGib(args.ClusterMetrics.TotalMemory)), colorRuleResources(args.ClusterMetrics, "MEM")},
 			{"PODS", fmt.Sprintf("%d", args.ClusterMetrics.TotalPodCapacity), colorRuleResources(args.ClusterMetrics, "POD")},
 		},
 	})
 
 	m.PlainText("> Legenda:\n>\n> 🟩 - nível recomendado; 🟨 - requer atenção; 🟥 - nível crítico.")
+	m.PlainTextf("")
 
-	m.PlainTextf("\n")
-
-	m.H3(fmt.Sprintf("%d.3. Uso de memória dos nodes", args.Index))
+	m.H3(fmt.Sprintf("%d.4. Uso de memória dos nodes", args.Index))
+	m.PlainTextf("")
 
 	var gt65, gt80, lt65 int
 	for _, nodeMetric := range args.NodeMetrics {
@@ -109,11 +116,11 @@ func GenerateFile(args FileVars) {
 	})
 
 	m.PlainText("> Legenda:\n>\n> 🟩 - uso normal; 🟨 - uso grande; 🟥 - uso excessivo.")
+	m.PlainTextf("")
 
-	m.PlainTextf("\n")
+	m.H3(fmt.Sprintf("%d.5. Alertas", args.Index))
+	m.PlainTextf("")
 
-	m.H3(fmt.Sprintf("%d.4. Alertas", args.Index))
-	
 	var size int
 	if len(args.AlertsList) > 0 {
 		size = len(args.AlertsList)
@@ -146,9 +153,8 @@ func GenerateFile(args FileVars) {
 	},
 	)
 
-	m.PlainTextf("\n")
-
-	m.H3(fmt.Sprintf("%d.5. Incidentes", args.Index))
+	m.H3(fmt.Sprintf("%d.6. Incidentes", args.Index))
+	m.PlainTextf("")
 
 	var (
 		loki, monitoring, cattleSystem, gita, kubeSystem, certManager, others int
@@ -189,8 +195,10 @@ func GenerateFile(args FileVars) {
 
 	m.PlainText("> Legenda:\n>\n> 🟩 - sem incidentes; 🟥 - possui incidentes.")
 
+	m.PlainTextf("")
 	m.HorizontalRule()
 	m.PlainTextf("\n")
+
 	m.Build()
 }
 
@@ -238,8 +246,4 @@ func colorRuleResources(cm metrics.TotalMetrics, rss string) string {
 	}
 }
 
-func mapTotalMemorytoGib(mem int) float64 {
-	memGib := float64(mem) / 1024
-	memGib = memGib / 1024
-	return memGib
-}
+

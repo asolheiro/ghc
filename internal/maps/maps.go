@@ -24,3 +24,9 @@ func TimeNowToFormattedDate() string {
 	now := time.Now()
 	return fmt.Sprintf("%d de %s de %d", now.Day(), monthMap[now.Month()], now.Year())
 }
+
+func TotalMemoryToGib(mem int) float64 {
+	memGib := float64(mem) / 1024
+	memGib = memGib / 1024
+	return memGib
+}

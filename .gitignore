@@ -30,3 +30,4 @@ reports/
 healthCheck-*
 
 article.md
+.DS_Store

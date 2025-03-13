@@ -83,7 +83,6 @@ A segunda, `generate-md`, coletará as informações e gerará os relatórios  c
 
 ## 3. Melhorias futuras
 
-- Funcionalidade para gerar relatórios de organizações específicas
 - Funcionalidade para gerar relatórios de clusters específicos
 - Melhorar as saídas no terminal
 - Adicionar no Gita
