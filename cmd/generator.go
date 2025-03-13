@@ -9,6 +9,7 @@ import (
 
 	"github.com/asolheiro/gita-healthcheck/internal/auth"
 	"github.com/asolheiro/gita-healthcheck/internal/count"
+	"github.com/asolheiro/gita-healthcheck/internal/maps"
 	"github.com/asolheiro/gita-healthcheck/internal/md"
 	"github.com/spf13/cobra"
 )
@@ -43,25 +44,7 @@ var generateMdCmd = &cobra.Command{
 	},
 }
 
-func timeNowToFormattedDate() string {
-	monthMap := map[time.Month]string{
-		time.January:   "Janeiro",
-		time.February:  "Fevereiro",
-		time.March:     "Março",
-		time.April:     "Abril",
-		time.May:       "Maio",
-		time.June:      "Junho",
-		time.July:      "Julho",
-		time.August:    "Agosto",
-		time.September: "Setembro",
-		time.October:   "Outubro",
-		time.November:  "Novembro",
-		time.December:  "Dezembro",
-	}
 
-	now := time.Now()
-	return fmt.Sprintf("%d de %s de %d", now.Day(), monthMap[now.Month()], now.Year())
-}
 
 func generateOrgReport(org count.Msg, auth *auth.AuthResponse) {
 	fmt.Printf("\nGenerating report for organization: %s\n", org.Organization.Name)
@@ -80,7 +63,7 @@ func generateOrgReport(org count.Msg, auth *auth.AuthResponse) {
 	}
 	defer f1.Close()
 
-	orgHeader := fmt.Sprintf("# %s - %s\n\n", org.Organization.Name, timeNowToFormattedDate())
+	orgHeader := fmt.Sprintf("# %s - %s\n\n", org.Organization.Name, maps.TimeNowToFormattedDate())
 	if _, err := f1.WriteString(orgHeader); err != nil {
 		log.Fatalf("Error writing org header: %v", err)
 	}
