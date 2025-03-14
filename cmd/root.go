@@ -27,6 +27,7 @@ in the cost of a few lines in CLI
 		printHcCmd,
 		generateMdCmd,
 		generatePdfCmd,
+		generateTeaCmd,
 	)
 
 	return rootCmd

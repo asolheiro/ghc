@@ -44,7 +44,7 @@ var generateMdCmd = &cobra.Command{
 
 
 
-func generateOrgReport(org count.Msg, auth *auth.AuthResponse) {
+func generateOrgReport(org count.Msg, auth *auth.AuthResponse) string {
 	fmt.Printf("\nGenerating report for organization: %s\n", org.Organization.Name)
 	fmt.Printf("Ω Total clusters found: %d\n", len(org.Clusters))
 
@@ -106,6 +106,7 @@ func generateOrgReport(org count.Msg, auth *auth.AuthResponse) {
 
 		fmt.Printf("    Σ Finished processing cluster %d: %s\n", i+1, cluster.Name)
 	}
+	return mainFile
 }
 
 func generateAllReports(count count.CountResponse, authResponse *auth.AuthResponse) {
@@ -113,6 +114,6 @@ func generateAllReports(count count.CountResponse, authResponse *auth.AuthRespon
 		fmt.Printf("\nGenerating report for organization: %s\n", msgCount.Organization.Name)
 		fmt.Printf("Ω Total clusters found: %d\n", len(msgCount.Clusters))
 		
-		generateOrgReport(msgCount, authResponse)
+		_ = generateOrgReport(msgCount, authResponse)
 	}
 }

@@ -31,3 +31,4 @@ healthCheck-*
 
 article.md
 .DS_Store
+Makefile
