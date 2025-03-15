@@ -6,18 +6,18 @@ import (
 
 	"github.com/asolheiro/gita-healthcheck/internal/auth"
 	"github.com/asolheiro/gita-healthcheck/internal/count"
-	tea "github.com/asolheiro/gita-healthcheck/internal/teaOutput"
+	tu "github.com/asolheiro/gita-healthcheck/internal/terminal-utils"
 	"github.com/spf13/cobra"
 )
 
 
 func init() {
-	generateTeaCmd.Flags().StringVarP(&orgFilter, "org", "o", "", "Filter report to specific organization name")
+	generatePageCmd.Flags().StringVarP(&orgFilter, "org", "o", "", "Filter report to specific organization name")
 }
 
-var generateTeaCmd = &cobra.Command{
-	Use:   "generate-tea",
-	Short: "Generate a markdown file with a simple report of Gita's plataform",
+var generatePageCmd = &cobra.Command{
+	Use:   "pg-gen",
+	Short: "Generate a TUI with the proger mardown file with a simple report of Gita's plataform",
 	Run: func(cmd *cobra.Command, args []string) {
 		authResponse, err := auth.Authentication()
 		if err != nil {
@@ -30,7 +30,7 @@ var generateTeaCmd = &cobra.Command{
 			for _, org := range count.Msg {
 				if org.Organization.Name == orgFilter {
 					fileName := generateOrgReport(org, authResponse)
-					tea.PrintTea(fileName)
+					tu.PrintTea(fileName)
 				}
 			}
 		} else {

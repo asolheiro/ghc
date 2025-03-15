@@ -13,9 +13,10 @@ import (
 	"github.com/asolheiro/gita-healthcheck/internal/metrics"
 	"github.com/asolheiro/gita-healthcheck/internal/problem"
 	"github.com/asolheiro/gita-healthcheck/internal/security"
-	terminalutils "github.com/asolheiro/gita-healthcheck/internal/terminal-utils"
+	tu "github.com/asolheiro/gita-healthcheck/internal/terminal-utils"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/spf13/cobra"
+	"github.com/fatih/color"
 )
 
 //go:generate go run main.go
@@ -160,8 +161,6 @@ func getInfoWithGoRoutine(auth auth.AuthResponse, clusterId string) hcVars {
 }
 
 func processOrg(org count.Msg, authResponse auth.AuthResponse) {
-	fmt.Printf("\n %s (%s)\n", org.Organization.Name, org.Organization.ID)
-	
 	semaphore := make(chan struct{}, concurrencyLimit)
 	
 	var wg sync.WaitGroup
@@ -173,11 +172,9 @@ func processOrg(org count.Msg, authResponse auth.AuthResponse) {
 		go func(c count.Cluster) {
 			defer wg.Done()
 			
-			// Acquire a slot in the semaphore
 			semaphore <- struct{}{}
 			defer func() { <-semaphore }()
 			
-			fmt.Printf("Processing cluster: %s\n", c.Name)
 			res := getInfoWithGoRoutine(authResponse, c.ClusterID)
 			
 			row := []any{
@@ -199,7 +196,9 @@ func processOrg(org count.Msg, authResponse auth.AuthResponse) {
 	}
 	
 	wg.Wait()
-	terminalutils.PrettyTables(rows)
+	clusterSpec := fmt.Sprintf("\n %s (%s)\n", org.Organization.Name, org.Organization.ID)
+	color.RGB(241, 191, 36).Println(clusterSpec)
+	tu.PrettyTables(rows)
 }
 
 func processAllOrgs(orgs []count.Msg, authResponse auth.AuthResponse) {

@@ -1,4 +1,4 @@
-package teaoutput
+package terminalutils
 
 import (
 	"fmt"

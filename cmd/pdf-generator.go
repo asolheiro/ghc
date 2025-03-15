@@ -22,7 +22,7 @@ func init() {
 }
 
 var generatePdfCmd = &cobra.Command {
-		Use:   "generate-pdf",
+		Use:   "gen-pdf",
 		Short: "Generate PDF from markdown files",
 		Run: func(cmd *cobra.Command, args []string) {
 			

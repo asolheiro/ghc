@@ -9,7 +9,7 @@ import (
 
 func NewRootCmd() *cobra.Command {
 	rootCmd := &cobra.Command{
-		Use:           "gita-healthcheck",
+		Use:           "ghc",
 		Short:         "Gita HealthCheck is a simple report generator of Gita's plataform",
 		Long: `
 Gita HealthCheck is a simple report generator of Gita's plataform that automatize
@@ -27,7 +27,7 @@ in the cost of a few lines in CLI
 		printHcCmd,
 		generateMdCmd,
 		generatePdfCmd,
-		generateTeaCmd,
+		generatePageCmd,
 	)
 
 	return rootCmd

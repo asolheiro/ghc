@@ -20,7 +20,7 @@ import (
 	}
 
 var generateMdCmd = &cobra.Command{
-	Use:   "generate-md",
+	Use:   "gen-md",
 	Short: "Generate a markdown file with a simple report of Gita's plataform",
 	Run: func(cmd *cobra.Command, args []string) {
 		authResponse, err := auth.Authentication()
