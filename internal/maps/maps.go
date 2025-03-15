@@ -3,6 +3,8 @@ package maps
 import (
 	"fmt"
 	"time"
+
+	"github.com/asolheiro/gita-healthcheck/internal/api-calls/count"
 )
 
 func TimeNowToFormattedDate() string {
@@ -41,4 +43,13 @@ func MapDaysToColorMark(daysRemaining int) string {
 	} else {
 		return "🟥"
 	}
+}
+
+func GetOrg(orgs []count.Msg, orgFilter string) count.Msg {
+	for _, org := range orgs {
+		if orgFilter == org.Organization.Name {
+			return org
+		}
+	}
+	return count.Msg{}
 }

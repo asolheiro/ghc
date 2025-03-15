@@ -11,6 +11,7 @@ import (
 
 	"github.com/asolheiro/gita-healthcheck/internal/api-calls/auth"
 	"github.com/asolheiro/gita-healthcheck/internal/api-calls/count"
+	"github.com/asolheiro/gita-healthcheck/internal/maps"
 	"github.com/chromedp/cdproto/page"
 	"github.com/chromedp/chromedp"
 	"github.com/russross/blackfriday/v2"
@@ -32,46 +33,32 @@ var generatePdfCmd = &cobra.Command {
 			}
 
 			count, _ := count.GetUserCount(authResponse.AccessToken)
-
 			if orgFilter != "" {
-				for _, org := range count.Msg {
-					if org.Organization.Name == orgFilter {
-						generateOrgReport(org, authResponse)
-
-						mdFile, err := findMarkdownFiles("./reports")
-							if err != nil {
-								fmt.Printf("Error finding markdown files: %v\n", err)
-								return
-							}
-							pdfFile := strings.TrimSuffix(mdFile[0], ".md") + ".pdf"
-						if err := convertMarkdownToPDF(mdFile[0], pdfFile); err != nil {
-							fmt.Printf("Error converting %s: %v\n", mdFile, err)
-						} else {
-							fmt.Printf("Successfully converted %s to %s\n", mdFile[0], pdfFile)
-						}
-					}
-				}
-			} else {
-				generateAllReports(count, authResponse)
-				mdFiles, err := findMarkdownFiles("./reports")
-				if err != nil {
-					fmt.Printf("Error finding markdown files: %v\n", err)
-					return
-				}
-				for _, mdFile := range mdFiles {
-					pdfFile := strings.TrimSuffix(mdFile, ".md") + ".pdf"
-					fmt.Printf("Converting %s to %s\n", mdFile, pdfFile)
-	
-					if err := convertMarkdownToPDF(mdFile, pdfFile); err != nil {
-						fmt.Printf("Error converting %s: %v\n", mdFile, err)
-					} else {
-						fmt.Printf("Successfully converted %s to %s\n", mdFile, pdfFile)
-					}
-				}
-			}
+                org := maps.GetOrg(count.Msg, orgFilter)
+                generateOrgReport(org, authResponse)
+                convertReports()
+            } else {
+                generateAllReports(count, authResponse)
+                convertReports()
+        }
 		},
 	}
 
+func convertReports() {
+    mdFiles, err := findMarkdownFiles("./reports")
+    if err != nil {
+        fmt.Printf("Error finding markdown files: %v\n", err)
+        return
+    }
+    for i, mdFile := range mdFiles {
+        pdfFile := strings.TrimSuffix(mdFiles[i], ".md") + ".pdf"
+        if err := convertMarkdownToPDF(mdFile, pdfFile); err != nil {
+            fmt.Printf("Error converting %s: %v\n", mdFile, err)
+        } else {
+            fmt.Printf("Successfully converted %s to %s\n", mdFile, pdfFile)
+        }
+    }
+}
 
 func findMarkdownFiles(dir string) ([]string, error) {
 	if _, err := os.Stat(dir); os.IsNotExist(err) {

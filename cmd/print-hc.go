@@ -13,6 +13,7 @@ import (
 	"github.com/asolheiro/gita-healthcheck/internal/api-calls/metrics"
 	"github.com/asolheiro/gita-healthcheck/internal/api-calls/problem"
 	"github.com/asolheiro/gita-healthcheck/internal/api-calls/security"
+	"github.com/asolheiro/gita-healthcheck/internal/maps"
 	tu "github.com/asolheiro/gita-healthcheck/internal/terminal-utils"
 	"github.com/fatih/color"
 	"github.com/jedib0t/go-pretty/v6/table"
@@ -54,7 +55,7 @@ in the cost of a few lines in CLI
 		if orgFilter == "" {
 			processAllOrgs(userCount.Msg, *authResponse)
 		} else {
-			org := getOrg(userCount.Msg)
+			org := maps.GetOrg(userCount.Msg, orgFilter)
 			if org.Organization.Name == "" {
 				log.Fatalf("Organization '%s' not found", orgFilter)
 			}
@@ -63,14 +64,7 @@ in the cost of a few lines in CLI
 	},
 }
 
-func getOrg(orgs []count.Msg) count.Msg {
-	for _, org := range orgs {
-		if orgFilter == org.Organization.Name {
-			return org
-		}
-	}
-	return count.Msg{}
-}
+
 
 type hcVars struct {
 	usageCPU      string
