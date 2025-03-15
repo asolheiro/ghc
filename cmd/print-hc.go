@@ -6,17 +6,17 @@ import (
 
 	"log"
 
-	"github.com/asolheiro/gita-healthcheck/internal/alerts"
-	"github.com/asolheiro/gita-healthcheck/internal/auth"
-	"github.com/asolheiro/gita-healthcheck/internal/count"
-	"github.com/asolheiro/gita-healthcheck/internal/incidents"
-	"github.com/asolheiro/gita-healthcheck/internal/metrics"
-	"github.com/asolheiro/gita-healthcheck/internal/problem"
-	"github.com/asolheiro/gita-healthcheck/internal/security"
+	"github.com/asolheiro/gita-healthcheck/internal/api-calls/alerts"
+	"github.com/asolheiro/gita-healthcheck/internal/api-calls/auth"
+	"github.com/asolheiro/gita-healthcheck/internal/api-calls/count"
+	"github.com/asolheiro/gita-healthcheck/internal/api-calls/incidents"
+	"github.com/asolheiro/gita-healthcheck/internal/api-calls/metrics"
+	"github.com/asolheiro/gita-healthcheck/internal/api-calls/problem"
+	"github.com/asolheiro/gita-healthcheck/internal/api-calls/security"
 	tu "github.com/asolheiro/gita-healthcheck/internal/terminal-utils"
+	"github.com/fatih/color"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/spf13/cobra"
-	"github.com/fatih/color"
 )
 
 //go:generate go run main.go

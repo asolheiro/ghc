@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	httputils "github.com/asolheiro/gita-healthcheck/internal/http_utils"
+	httputils "github.com/asolheiro/gita-healthcheck/internal/api-calls/http_utils"
 )
 
 const apiUrl = "https://api-cluster.api.gita.cloud/count/"

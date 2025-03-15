@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/asolheiro/gita-healthcheck/internal/auth"
-	"github.com/asolheiro/gita-healthcheck/internal/count"
+	"github.com/asolheiro/gita-healthcheck/internal/api-calls/auth"
+	"github.com/asolheiro/gita-healthcheck/internal/api-calls/count"
 	tu "github.com/asolheiro/gita-healthcheck/internal/terminal-utils"
 	"github.com/spf13/cobra"
 )

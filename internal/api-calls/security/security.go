@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	httputils "github.com/asolheiro/gita-healthcheck/internal/http_utils"
+	httputils "github.com/asolheiro/gita-healthcheck/internal/api-calls/http_utils"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 

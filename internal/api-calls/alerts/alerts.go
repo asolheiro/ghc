@@ -1,4 +1,4 @@
-package problem
+package alerts
 
 import (
 	"bytes"
@@ -7,29 +7,28 @@ import (
 	"net/http"
 	"time"
 
-	httputils "github.com/asolheiro/gita-healthcheck/internal/http_utils"
+	httputils "github.com/asolheiro/gita-healthcheck/internal/api-calls/http_utils"
 )
 
-type Response struct {
-	Status string     `json:"status"`
-	Msg    []Problem `json:"msg"`
-	Total  int        `json:"total"`
+type AlertResponse struct {
+	Status string `json:"status"`
+	Msg    []Msg  `json:"msg"`
+	Total  int    `json:"total"`
 }
 
-type Problem struct {
+type Msg struct {
 	ID           ObjectID  `json:"_id"`
 	Type         string    `json:"type"`
 	CheckID      string    `json:"check_id"`
-	Msg          MsgDetail `json:"msg"`
+	Kind         string    `json:"kind"`
 	Severity     string    `json:"severity"`
 	ConfigID     string    `json:"config_id"`
-	Kind         string    `json:"kind"`
-	UniqueID     string    `json:"id"`
 	Name         string    `json:"name"`
+	Msg          string    `json:"msg"`
 	Namespace    string    `json:"namespace"`
+	Cliente      Cliente   `json:"cliente"`
 	CreationDate TimeStamp `json:"creation_date"`
 	DataHora     TimeStamp `json:"data_hora"`
-	Cliente      Cliente   `json:"cliente"`
 	Ack          Ack       `json:"ack"`
 }
 
@@ -59,16 +58,8 @@ type Timeline struct {
 	State   string    `json:"state"`
 }
 
-type MsgDetail struct {
-	ContainerName string `json:"container_name"`
-	Reason        string `json:"reason"`
-}
-
-func GetProblems(token, clusterId string) (Response, error) {
-	url := fmt.Sprintf(
-		"https://api-principal-geral.api.gita.cloud/problem/%s?page=1&limit=100",
-		clusterId,
-	)
+func GetAlerts(token, clusterId string) ([]Msg, error) {
+	url := fmt.Sprintf("https://api-principal-geral.api.gita.cloud/alert/%s?page=1&limit=100", clusterId)
 	body, err := httputils.HttpRequest(
 		nil,
 		http.MethodGet,
@@ -76,12 +67,12 @@ func GetProblems(token, clusterId string) (Response, error) {
 		token,
 	)
 	if err != nil {
-		return Response{}, fmt.Errorf("error requesting data, err: %w", err)
+		return nil, fmt.Errorf("error requesting data, err: %w", err)
 	}
 
-	var response Response
+	var response AlertResponse
 	if err := json.NewDecoder(bytes.NewReader(body)).Decode(&response); err != nil {
-		return Response{}, fmt.Errorf("error decoding JSON, err: %w", err)
+		return nil, fmt.Errorf("error decoding json, err: %w", err)
 	}
-	return response, nil
+	return response.Msg, nil
 }

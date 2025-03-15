@@ -4,15 +4,15 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/asolheiro/gita-healthcheck/internal/alerts"
-	"github.com/asolheiro/gita-healthcheck/internal/auth"
-	"github.com/asolheiro/gita-healthcheck/internal/count"
-	"github.com/asolheiro/gita-healthcheck/internal/incidents"
+	"github.com/asolheiro/gita-healthcheck/internal/api-calls/alerts"
+	"github.com/asolheiro/gita-healthcheck/internal/api-calls/auth"
+	"github.com/asolheiro/gita-healthcheck/internal/api-calls/count"
+	"github.com/asolheiro/gita-healthcheck/internal/api-calls/incidents"
+	"github.com/asolheiro/gita-healthcheck/internal/api-calls/metrics"
+	"github.com/asolheiro/gita-healthcheck/internal/api-calls/problem"
+	"github.com/asolheiro/gita-healthcheck/internal/api-calls/security"
+	"github.com/asolheiro/gita-healthcheck/internal/api-calls/version"
 	"github.com/asolheiro/gita-healthcheck/internal/maps"
-	"github.com/asolheiro/gita-healthcheck/internal/metrics"
-	"github.com/asolheiro/gita-healthcheck/internal/problem"
-	"github.com/asolheiro/gita-healthcheck/internal/security"
-	"github.com/asolheiro/gita-healthcheck/internal/version"
 	md "github.com/nao1215/markdown"
 )
 

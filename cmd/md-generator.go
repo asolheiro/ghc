@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/asolheiro/gita-healthcheck/internal/auth"
-	"github.com/asolheiro/gita-healthcheck/internal/count"
+	"github.com/asolheiro/gita-healthcheck/internal/api-calls/auth"
+	"github.com/asolheiro/gita-healthcheck/internal/api-calls/count"
 	"github.com/asolheiro/gita-healthcheck/internal/maps"
 	"github.com/asolheiro/gita-healthcheck/internal/md"
 	"github.com/spf13/cobra"

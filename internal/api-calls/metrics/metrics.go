@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	httputils "github.com/asolheiro/gita-healthcheck/internal/http_utils"
+	httputils "github.com/asolheiro/gita-healthcheck/internal/api-calls/http_utils"
 )
 
 type Node struct {

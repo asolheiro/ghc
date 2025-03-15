@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/asolheiro/gita-healthcheck/internal/auth"
-	"github.com/asolheiro/gita-healthcheck/internal/count"
+	"github.com/asolheiro/gita-healthcheck/internal/api-calls/auth"
+	"github.com/asolheiro/gita-healthcheck/internal/api-calls/count"
 	"github.com/chromedp/cdproto/page"
 	"github.com/chromedp/chromedp"
 	"github.com/russross/blackfriday/v2"

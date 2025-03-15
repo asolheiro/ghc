@@ -30,3 +30,15 @@ func TotalMemoryToGib(mem int) float64 {
 	memGib = memGib / 1024
 	return memGib
 }
+
+func MapDaysToColorMark(daysRemaining int) string {
+	if daysRemaining > 180 {
+		return "🟩"
+	} else if daysRemaining > 30 {
+		return " 🟨"
+	} else if daysRemaining > 0 {
+		return "🟧"
+	} else {
+		return "🟥"
+	}
+}

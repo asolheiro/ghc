@@ -7,6 +7,8 @@ import (
 	"regexp"
 	"strings"
 	"time"
+
+	"github.com/asolheiro/gita-healthcheck/internal/maps"
 )
 
 type ResponseEOL struct {
@@ -81,17 +83,6 @@ func DaysUntilEndOfSupport(endDateStr string) (int, error) {
 	return daysRemaining, nil
 }
 
-func MapDaysToColorMark(daysRemaining int) string {
-	if daysRemaining > 180 {
-		return "🟩"
-	} else if daysRemaining > 30 {
-		return " 🟨"
-	} else if daysRemaining > 0 {
-		return "🟧"
-	} else {
-		return "🟥"
-	}
-}
 
 func IdentifyProductType(version string) (string, string) {
 	re := regexp.MustCompile(`v(\d+\.\d+)`)
@@ -141,7 +132,7 @@ func GatherKubernetesInfo(version string) (KubernetesVersionResponse, error) {
 	if err != nil {
 		return KubernetesVersionResponse{}, fmt.Errorf("error retrieving remaing days")
 	}
-	colorMark := MapDaysToColorMark(daysRemaining)
+	colorMark := maps.MapDaysToColorMark(daysRemaining)
 
 	endOfSupport, err := time.Parse("2006-01-02", cycleInfo.EndOfLife)
 	if err != nil {
