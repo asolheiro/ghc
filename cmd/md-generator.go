@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/asolheiro/gita-healthcheck/internal/api-calls/auth"
@@ -14,48 +16,51 @@ import (
 	"github.com/spf13/cobra"
 )
 
-
-	func init() {
-		generateMdCmd.Flags().StringVarP(&orgFilter, "org", "o", "", "Filter report to specific organization name")
-	}
+func init() {
+	generateMdCmd.Flags().StringVarP(&orgFilter, "org", "o", "", "Filter report to specific organization name")
+}
 
 var generateMdCmd = &cobra.Command{
 	Use:   "gen-md",
-	Short: "Generate a markdown file with a simple report of Gita's plataform",
+	Short: "Generate a markdown file with a simple report of Gita's platform",
 	Run: func(cmd *cobra.Command, args []string) {
 		authResponse, err := auth.Authentication()
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		count, _ := count.GetUserCount(authResponse.AccessToken)
+		count, err := count.GetUserCount(authResponse.AccessToken)
+		if err != nil {
+			log.Fatal("Error getting user count:", err)
+		}
 
 		if orgFilter != "" {
 			for _, org := range count.Msg {
 				if org.Organization.Name == orgFilter {
 					generateOrgReport(org, authResponse)
+					break
 				}
 			}
 		} else {
 			generateAllReports(count, authResponse)
-		}	
+		}
 	},
 }
 
-
-
 func generateOrgReport(org count.Msg, auth *auth.AuthResponse) string {
 	fmt.Printf("\nGenerating report for organization: %s\n", org.Organization.Name)
-	fmt.Printf("Ω Total clusters found: %d\n", len(org.Clusters))
+	fmt.Printf("╰─ Total clusters found: %d\n", len(org.Clusters))
 
 	path := "reports"
-	_ = os.Mkdir(path, os.ModePerm)
+	if err := os.MkdirAll(path, os.ModePerm); err != nil {
+		log.Fatalf("Error creating reports directory: %v", err)
+	}
 
 	safeOrgName := strings.ReplaceAll(org.Organization.Name, " ", "_")
-	timeStr := time.Now().Format("02-01-2006") 
-	mainFile := fmt.Sprintf(path+"/%s_%s.md", safeOrgName, timeStr)
+	timeStr := time.Now().Format("02-01-2006")
+	mainFile := filepath.Join(path, fmt.Sprintf("%s_%s.md", safeOrgName, timeStr))
 
-	f1, err := os.OpenFile(mainFile, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
+	f1, err := os.Create(mainFile)
 	if err != nil {
 		log.Fatalf("Error creating main file: %v", err)
 	}
@@ -66,54 +71,58 @@ func generateOrgReport(org count.Msg, auth *auth.AuthResponse) string {
 		log.Fatalf("Error writing org header: %v", err)
 	}
 
+	var wg sync.WaitGroup
+	semaphore := make(chan struct{}, 5)
+	fileMutex := sync.Mutex{}
 	for i, cluster := range org.Clusters {
-		
-		var fileVars md.FileVars
-		done := make(chan struct{})
-		go func() {
-			fileVars = md.FindInfo(auth, org, i, cluster)
-			close(done)
-		}()
+		wg.Add(1)
+		semaphore <- struct{}{}
 
-		<-done
+		go func(index int, clusterInfo count.Cluster) {
+			defer wg.Done()
+			defer func() { <-semaphore }()
 
-		tmpFile := fmt.Sprintf("%d-gita-report-%s.md", i+1, cluster.Name)
-		
-		done = make(chan struct{})
-		go func() {
+			tmpFile := fmt.Sprintf("%d-gita-report-%s.md", index+1, clusterInfo.Name)
+
+			fileVars := md.FindInfo(auth, org, index, clusterInfo)
 			md.GenerateFile(fileVars)
-			close(done)
-		}()
-		
-		<-done
 
-		tmpContent, err := os.ReadFile(tmpFile)
-		if err != nil {
-			log.Fatalf("Error reading temp file: %v", err)
-		}
+			tmpContent, err := os.ReadFile(tmpFile)
+			if err != nil {
+				log.Printf("Error reading temp file %s: %v", tmpFile, err)
+				return
+			}
 
-		if _, err := f1.Seek(0, 2); err != nil {
-			log.Fatalf("Error seeking file: %v", err)
-		}
+			fileMutex.Lock()
+			if _, err := f1.Write(tmpContent); err != nil {
+				log.Printf("Error writing cluster content: %v", err)
+			}
+			fileMutex.Unlock()
 
-		if _, err := f1.Write(tmpContent); err != nil {
-			log.Fatalf("Error writing cluster content: %v", err)
-		}
-
-		if err := os.Remove(tmpFile); err != nil {
-			log.Printf("Warning: couldn't remove temp file %s: %v", tmpFile, err)
-		}
-
-		fmt.Printf("    Σ Finished processing cluster %d: %s\n", i+1, cluster.Name)
+			if err := os.Remove(tmpFile); err != nil {
+				log.Printf("Warning: couldn't remove temp file %s: %v", tmpFile, err)
+			}
+		}(i, cluster)
 	}
+
+	wg.Wait()
 	return mainFile
 }
 
-func generateAllReports(count count.CountResponse, authResponse *auth.AuthResponse) {
-	for _, msgCount := range count.Msg {
-		fmt.Printf("\nGenerating report for organization: %s\n", msgCount.Organization.Name)
-		fmt.Printf("Ω Total clusters found: %d\n", len(msgCount.Clusters))
-		
-		_ = generateOrgReport(msgCount, authResponse)
+func generateAllReports(countRes count.CountResponse, authResponse *auth.AuthResponse) {
+	var wg sync.WaitGroup
+	semaphore := make(chan struct{}, 3)
+
+	for _, msgCount := range countRes.Msg {
+		wg.Add(1)
+		semaphore <- struct{}{}
+		go func(org count.Msg) {
+			defer wg.Done()
+			defer func() { <-semaphore }()
+
+			_ = generateOrgReport(org, authResponse)
+		}(msgCount)
 	}
+
+	wg.Wait()
 }

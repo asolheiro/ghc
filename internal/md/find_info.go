@@ -1,7 +1,6 @@
 package md
 
 import (
-	"fmt"
 	"log"
 	"sync"
 
@@ -16,8 +15,6 @@ import (
 )
 
 func FindInfo(auth *auth.AuthResponse, msgCount count.Msg, i int, cluster count.Cluster) FileVars {
-	fmt.Printf("    σ Processing cluster %d/%d: %s\n", i+1, len(msgCount.Clusters), cluster.Name)
-
 	var wg sync.WaitGroup
 	wg.Add(7)
 
