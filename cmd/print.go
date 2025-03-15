@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"sync"
 
 	"log"
 
@@ -13,14 +14,19 @@ import (
 	"github.com/asolheiro/gita-healthcheck/internal/problem"
 	"github.com/asolheiro/gita-healthcheck/internal/security"
 	terminalutils "github.com/asolheiro/gita-healthcheck/internal/terminal-utils"
-	"github.com/charmbracelet/bubbles/table"
+	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/spf13/cobra"
 )
 
 //go:generate go run main.go
 
 func init() {
-	printHcCmd.Flags().StringVarP(&orgFilter, "org", "o", "", "Filter report to specific organization name")
+	printHcCmd.Flags().StringVarP(
+		&orgFilter, "org", "o", "", "Filter report to specific organization name",
+	)
+	printHcCmd.Flags().IntVarP(
+		&concurrencyLimit, "concurrency", "c", 2, "Maximum number of concurrent cluster operations",
+	)
 }
 
 var printHcCmd = &cobra.Command{
@@ -35,9 +41,6 @@ It gives the user a complete markdown report of what he can see in the plataform
 in the cost of a few lines in CLI
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if orgFilter == "" {
-			log.Fatalln("Please, insert a '-o/--org'")
-		}
 		authResponse, err := auth.Authentication()
 		if err != nil {
 			log.Fatalln(err)
@@ -47,37 +50,25 @@ in the cost of a few lines in CLI
 			log.Fatal(err)
 		}
 		
-		_, org := getOrg(userCount.Msg)
-		
-		var rows []table.Row
-		for _, cluster := range org.Clusters {
-			res := getInfoWithGoRoutine(*authResponse, cluster.ClusterID)
-
-			rows = append(rows, []string{
-				cluster.Name,
-				cluster.ClusterID,
-				res.usageCPU,
-				res.usageRAM,
-				res.usagePod,
-				res.alertsNum,
-				res.incidentsNum,
-				res.problemsNum,
-				res.securitiesNum,
-			})
+		if orgFilter == "" {
+			processAllOrgs(userCount.Msg, *authResponse)
+		} else {
+			org := getOrg(userCount.Msg)
+			if org.Organization.Name == "" {
+				log.Fatalf("Organization '%s' not found", orgFilter)
+			}
+			processOrg(org, *authResponse)
 		}
-
-		fmt.Printf("\n %s (%s)\n", org.Organization.Name, org.Organization.ID)
-		terminalutils.RunTables(rows)
 	},
 }
 
-func getOrg(orgs []count.Msg) (int, count.Msg) {
-	for i, org := range orgs {
+func getOrg(orgs []count.Msg) count.Msg {
+	for _, org := range orgs {
 		if orgFilter == org.Organization.Name {
-			return i, org
+			return org
 		}
 	}
-	return 0, count.Msg{}
+	return count.Msg{}
 }
 
 type hcVars struct {
@@ -92,47 +83,127 @@ type hcVars struct {
 
 func getInfoWithGoRoutine(auth auth.AuthResponse, clusterId string) hcVars {
 	var res hcVars
-	done := make(chan struct{})
+	var wg sync.WaitGroup
+	var mutex sync.Mutex
+
+	wg.Add(5)
+
 	go func() {
-		cm, _ := metrics.GetClusterMetrics(auth.AccessToken, clusterId)
+		defer wg.Done()
+		cm, err := metrics.GetClusterMetrics(auth.AccessToken, clusterId)
+		if err != nil {
+			log.Printf("Error getting cluster metrics: %v", err)
+			return
+		}
+		
+		mutex.Lock()
 		res.usageCPU = fmt.Sprintf("%.2f%%", cm.CPUUsePercentage)
 		res.usageRAM = fmt.Sprintf("%.2f%%", cm.MemoryUsePercentage)
 		res.usagePod = fmt.Sprintf("%d/%d", cm.TotalPods, cm.TotalPodCapacity)
-		close(done)
+		mutex.Unlock()
 	}()
-	<-done
-
-	done = make(chan struct{})
+	
 	go func() {
-		alerts, _ := alerts.GetAlerts(auth.AccessToken, clusterId)
+		defer wg.Done()
+		alerts, err := alerts.GetAlerts(auth.AccessToken, clusterId)
+		if err != nil {
+			log.Printf("Error getting alerts: %v", err)
+			return
+		}
+		
+		mutex.Lock()
 		res.alertsNum = fmt.Sprintf("%d", len(alerts))
-		close(done)
+		mutex.Unlock()
 	}()
-	<-done
-
-	done = make(chan struct{})
+	
 	go func() {
-		incidents, _ := incidents.GetIncidents(auth.AccessToken, clusterId)
+		defer wg.Done()
+		incidents, err := incidents.GetIncidents(auth.AccessToken, clusterId)
+		if err != nil {
+			log.Printf("Error getting incidents: %v", err)
+			return
+		}
+		
+		mutex.Lock()
 		res.incidentsNum = fmt.Sprintf("%d", incidents.Total)
-		close(done)
+		mutex.Unlock()
 	}()
-	<-done
-
-	done = make(chan struct{})
+	
 	go func() {
-		securities, _ := security.GetSecurity(auth.AccessToken, clusterId)
+		defer wg.Done()
+		securities, err := security.GetSecurity(auth.AccessToken, clusterId)
+		if err != nil {
+			log.Printf("Error getting securities: %v", err)
+			return
+		}
+		
+		mutex.Lock()
 		res.securitiesNum = fmt.Sprintf("%d", securities.Total)
-		close(done)
+		mutex.Unlock()
 	}()
-	<-done
-
-	done = make(chan struct{})
+	
 	go func() {
-		problems, _ := problem.GetProblems(auth.AccessToken, clusterId)
+		defer wg.Done()
+		problems, err := problem.GetProblems(auth.AccessToken, clusterId)
+		if err != nil {
+			log.Printf("Error getting problems: %v", err)
+			return
+		}
+		
+		mutex.Lock()
 		res.problemsNum = fmt.Sprintf("%d", problems.Total)
-		close(done)
+		mutex.Unlock()
 	}()
-	<-done
-
+	
+	wg.Wait()
 	return res
+}
+
+func processOrg(org count.Msg, authResponse auth.AuthResponse) {
+	fmt.Printf("\n %s (%s)\n", org.Organization.Name, org.Organization.ID)
+	
+	semaphore := make(chan struct{}, concurrencyLimit)
+	
+	var wg sync.WaitGroup
+	var mutex sync.Mutex
+	rows := make([]table.Row, 0, len(org.Clusters))
+	
+	for _, cluster := range org.Clusters {
+		wg.Add(1)
+		go func(c count.Cluster) {
+			defer wg.Done()
+			
+			// Acquire a slot in the semaphore
+			semaphore <- struct{}{}
+			defer func() { <-semaphore }()
+			
+			fmt.Printf("Processing cluster: %s\n", c.Name)
+			res := getInfoWithGoRoutine(authResponse, c.ClusterID)
+			
+			row := []any{
+				c.Name,
+				c.ClusterID,
+				res.usageCPU,
+				res.usageRAM,
+				res.usagePod,
+				res.alertsNum,
+				res.incidentsNum,
+				res.problemsNum,
+				res.securitiesNum,
+			}
+			
+			mutex.Lock()
+			rows = append(rows, row)
+			mutex.Unlock()
+		}(cluster)
+	}
+	
+	wg.Wait()
+	terminalutils.PrettyTables(rows)
+}
+
+func processAllOrgs(orgs []count.Msg, authResponse auth.AuthResponse) {
+	for _, org := range orgs {
+		processOrg(org, authResponse)
+	}
 }

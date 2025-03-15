@@ -15,9 +15,9 @@ import (
 )
 
 
-func init() {
-	generateMdCmd.Flags().StringVarP(&orgFilter, "org", "o", "", "Filter report to specific organization name")
-}
+	func init() {
+		generateMdCmd.Flags().StringVarP(&orgFilter, "org", "o", "", "Filter report to specific organization name")
+	}
 
 var generateMdCmd = &cobra.Command{
 	Use:   "generate-md",

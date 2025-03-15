@@ -1,3 +1,6 @@
 package cmd
 
-var orgFilter string
+var (
+	orgFilter string
+	concurrencyLimit int
+)
