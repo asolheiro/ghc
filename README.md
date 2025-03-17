@@ -32,7 +32,7 @@ As informações coletadas são para geração de relatórios são:
 
 - Go instalado na versão 1.23.5 ou superior
 - Uma conta na plataforma Gita
-- 
+-
 
 ### 2.1. Clone e criação do binário
 
@@ -56,7 +56,7 @@ Então, mova o arquivo para a pasta desejada e execute a ferramenta.
 
 ### 2.2. Autenticação
 
-Independente da operação executada, a ferramenta requisita credenciais para autenticação na plataforma. 
+Independente da operação executada, a ferramenta requisita credenciais para autenticação na plataforma.
 
 A primeira é utilizando variáveis de ambiente ou um arquivo `.env` no mesmo nível do binário. Em toda execução, a ferramenta buscará as variáveis `EMAIL` e `PASSWORD` no ambiente ou, somente senão encontrar, requisitará ao usuário conforme mostrado abaixo:
 
@@ -67,17 +67,20 @@ A primeira é utilizando variáveis de ambiente ou um arquivo `.env` no mesmo n�
 GHC tem duas operações definidas para o usuário:
 
 - `print-hc`
-- `generate-md`
+- `gen-md`
+
+> [!NOTE]
+> Para versões anteriores à `1.7`, utilize o comando `generate-md`
 
 Conforme mostrado abaixo:
 
 ![ghc-root](print-screens/ghc-root.png)
 
-A primeira, `print-hc`, imprime no terminal um pequeno resumo das informações coletadas: 
+A primeira, `print-hc`, imprime no terminal um pequeno resumo das informações coletadas:
 
 ![print-hc](./print-screens/ghc-print-hc.png)
 
-A segunda, `generate-md`, coletará as informações e gerará os relatórios  confore o template mostrado a cima: 
+A segunda, `gen-md`, coletará as informações e gerará os relatórios  confore o template mostrado a cima:
 
 ![ghc-generation](./print-screens/ghc-generate-md.png)
 
