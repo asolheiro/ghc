@@ -92,7 +92,7 @@ func convertMarkdownToPDF(mdFile, pdfFile string) error {
     <meta charset="UTF-8">
     <style>
         body { 
-            font-family: Arial, sans-serif; 
+            font-family: Arial, sans-serif;
             line-height: 1.6; 
             margin: 2em;
             max-width: 800px;
