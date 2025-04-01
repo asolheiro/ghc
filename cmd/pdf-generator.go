@@ -35,29 +35,44 @@ var generatePdfCmd = &cobra.Command {
 			count, _ := count.GetUserCount(authResponse.AccessToken)
 			if orgFilter != "" {
                 org := maps.GetOrg(count.Msg, orgFilter)
-                generateOrgReport(org, authResponse)
-                convertReports()
+                fileName := generateOrgReport(org, authResponse)
+                if err := convertReport(fileName); err != nil {
+                    fmt.Printf("error converting report '%s', err: %v", fileName, err)
+                }
             } else {
                 generateAllReports(count, authResponse)
-                convertReports()
+                if err := convertReports(); err != nil {
+                    fmt.Println("error converting reports, err: %w", err)
+                }
         }
 		},
 	}
 
-func convertReports() {
+func convertReport(fileName string) error {
+    pdfFile := strings.TrimSuffix(fileName, ".md") + ".pdf"
+    if err := convertMarkdownToPDF(fileName, pdfFile); err != nil {
+        return fmt.Errorf("error converting %s: %w", fileName, err)
+    }
+    
+    fmt.Printf("\nSuccessfully converted %s to %s\n", fileName, pdfFile)
+    return nil
+}
+
+
+func convertReports() error {
     mdFiles, err := findMarkdownFiles("./reports")
     if err != nil {
-        fmt.Printf("Error finding markdown files: %v\n", err)
-        return
+        return fmt.Errorf("error finding markdown files: %w", err)
     }
     for i, mdFile := range mdFiles {
         pdfFile := strings.TrimSuffix(mdFiles[i], ".md") + ".pdf"
         if err := convertMarkdownToPDF(mdFile, pdfFile); err != nil {
-            fmt.Printf("Error converting %s: %v\n", mdFile, err)
-        } else {
-            fmt.Printf("Successfully converted %s to %s\n", mdFile, pdfFile)
+            return fmt.Errorf("error converting %s: %w", mdFile, err)
         }
+        
+        fmt.Printf("Successfully converted %s to %s\n", mdFile, pdfFile)
     }
+    return nil
 }
 
 func findMarkdownFiles(dir string) ([]string, error) {

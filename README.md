@@ -32,7 +32,7 @@ As informações coletadas são para geração de relatórios são:
 
 - Go instalado na versão 1.23.5 ou superior
 - Uma conta na plataforma Gita
--
+
 
 ### 2.1. Clone e criação do binário
 
@@ -66,23 +66,12 @@ A primeira é utilizando variáveis de ambiente ou um arquivo `.env` no mesmo n�
 
 GHC tem duas operações definidas para o usuário:
 
-- `print-hc`
-- `gen-md`
-
-> [!NOTE]
-> Para versões anteriores à `1.7`, utilize o comando `generate-md`
-
-Conforme mostrado abaixo:
-
-![ghc-root](print-screens/ghc-root.png)
-
-A primeira, `print-hc`, imprime no terminal um pequeno resumo das informações coletadas:
-
-![print-hc](./print-screens/ghc-print-hc.png)
-
-A segunda, `gen-md`, coletará as informações e gerará os relatórios  confore o template mostrado a cima:
-
-![ghc-generation](./print-screens/ghc-generate-md.png)
+-   `gen-md`      Gera um arquivo markdown com um relatório simples da plataforma Gita.
+-   `gen-pdf`     Gera um PDF a partir dos markdowns criados.
+-   `gql-gen`     Gera uma requisição GraphQL POST para criar uma página diretamente na Wiki.Js.
+-   `pg-gen`      Gera uma interface para visualização do relatório no terminal a partir do relatório markdown.
+-   `prin-hc`     Imprime no terminal um relatório simples da plataforma GITA.
+-   `help`        Ajuda para os comandos
 
 ## 3. Melhorias futuras
 
