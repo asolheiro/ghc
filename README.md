@@ -73,13 +73,13 @@ GHC tem duas operações definidas para o usuário:
 -   `prin-hc`     Imprime no terminal um relatório simples da plataforma GITA.
 -   `help`        Ajuda para os comandos
 
-## 3. Arquivo .Env
+## 3. Modelo arquivo .Env
 
 ```.env
 EMAIL=<GITA_EMAIL>
 PASSWORD=<GITA_PASSWORD>
-WIKIJS_URL=<GRAPH_QL_API_URL>
-WIKIJS_API_TOKEN=<GRAPH_QL_BASE_URL>
+WIKIJS_URL=<GRAPH_QL_API_URL>         # Opcional, apenas para a função GraphQL
+WIKIJS_API_TOKEN=<GRAPH_QL_BASE_URL>  # Opcional, apenas para a função GraphQL
 ```
 ## 4. Melhorias futuras
 
