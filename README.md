@@ -73,7 +73,15 @@ GHC tem duas operações definidas para o usuário:
 -   `prin-hc`     Imprime no terminal um relatório simples da plataforma GITA.
 -   `help`        Ajuda para os comandos
 
-## 3. Melhorias futuras
+## 3. Arquivo .Env
+
+```.env
+EMAIL=<GITA_EMAIL>
+PASSWORD=<GITA_PASSWORD>
+WIKIJS_URL=<GRAPH_QL_API_URL>
+WIKIJS_API_TOKEN=<GRAPH_QL_BASE_URL>
+```
+## 4. Melhorias futuras
 
 - Funcionalidade para gerar relatórios de clusters específicos
 - Melhorar as saídas no terminal
