@@ -29,6 +29,7 @@ in the cost of a few lines in CLI
 		generatePdfCmd,
 		generatePageCmd,
 		graphQlCmd,
+		whMessageCmd,
 	)
 
 	return rootCmd
