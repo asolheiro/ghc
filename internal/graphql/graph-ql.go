@@ -176,4 +176,3 @@ func handleGraphQLResponse(result GraphQLResponse) error {
 
 	return nil
 }
-

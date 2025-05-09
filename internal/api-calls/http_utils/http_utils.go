@@ -19,11 +19,11 @@ func HttpRequest(pl any, method, url, token string) ([]byte, error) {
 		url,
 		bytes.NewBuffer(payload),
 	)
-	 if err != nil {
+	if err != nil {
 		return nil, fmt.Errorf("error creating request, err : %w", err)
 	}
 
-	request.Header.Set("Authorization", "Bearer " + token)
+	request.Header.Set("Authorization", "Bearer "+token)
 	request.Header.Set("Accept", "application/json")
 	request.Header.Set("Content-Type", "application/json")
 
@@ -38,7 +38,7 @@ func HttpRequest(pl any, method, url, token string) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error reading response body: %v", err)
 	}
-	
+
 	if response.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("request failed with status code: %d. err: %s", response.StatusCode, string(body))
 	}

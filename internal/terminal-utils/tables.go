@@ -8,26 +8,23 @@ import (
 
 func PrettyTables(rows []table.Row) {
 	t := table.NewWriter()
-		t.SetOutputMirror(os.Stdout)
+	t.SetOutputMirror(os.Stdout)
 
-		t.AppendHeader(table.Row{
-			"Name",
-			"ClusterID",
-			"CPU (%)",
-			"RAM (%)",
-			"PODS ",
-			"Alerts",
-			"Incidents",
-			"Security",
-			"Problems",
-		})
+	t.AppendHeader(table.Row{
+		"Name",
+		"ClusterID",
+		"CPU (%)",
+		"RAM (%)",
+		"PODS ",
+		"Alerts",
+		"Incidents",
+		"Security",
+		"Problems",
+	})
 
+	t.AppendRows(rows)
 
-		t.AppendRows(rows)
-
-
-
-		t.SetStyle(table.StyleBold)		
-		t.SetStyle(table.StyleColoredBlackOnYellowWhite)
-		t.Render()
+	t.SetStyle(table.StyleBold)
+	t.SetStyle(table.StyleColoredBlackOnYellowWhite)
+	t.Render()
 }

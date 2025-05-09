@@ -204,53 +204,52 @@ func FindClustersInfo(auth *auth.AuthResponse, msgCount count.Msg, cluster count
 	}
 
 	var alertsData []Alert
-	for _, alert := range alertsDataRaw{
-		alertsData = append(alertsData, 
+	for _, alert := range alertsDataRaw {
+		alertsData = append(alertsData,
 			Alert{
-				AlertName: alert.Name,
-				AlertResource: alert.Kind,
-				AlertNamespace: alert.Namespace,
+				AlertName:        alert.Name,
+				AlertResource:    alert.Kind,
+				AlertNamespace:   alert.Namespace,
 				AlertDescription: alert.Msg,
-				AlertDate: alert.DataHora.Date.Format("02/01/06"),
+				AlertDate:        alert.DataHora.Date.Format("02/01/06"),
 			},
 		)
 	}
 
 	return KubernetesReportData{
-		Title: cluster.Name,
-		CreatedUtc: time.Now(),
-		NodesCount: cluster.Node,
+		Title:          cluster.Name,
+		CreatedUtc:     time.Now(),
+		NodesCount:     cluster.Node,
 		IncidentsCount: incidentsData.Total,
-		ProblemsCount: problemData.Total,
-		SecurityCount: securityData.Total,
+		ProblemsCount:  problemData.Total,
+		SecurityCount:  securityData.Total,
 
 		// Kubernetes Version
-		KubernetesVersion: k8sInfoData.Version,
-		EndOfSupport: k8sInfoData.EndOfSupport,
-		LatestRelease: k8sInfoData.LastRelease,
+		KubernetesVersion:         k8sInfoData.Version,
+		EndOfSupport:              k8sInfoData.EndOfSupport,
+		LatestRelease:             k8sInfoData.LastRelease,
 		K8sVersionSupportColorMap: k8sInfoData.SupportStatus,
-		
 
 		// Métrics
-		TotalCPU: clusterMetricsData.TotalCPU,
-		ColorMapCPU: maps.ColorRuleResources(clusterMetricsData, "CPU"),
-		TotalMemory: clusterMetricsData.TotalMemory,
-		ColorMapMemory: maps.ColorRuleResources(clusterMetricsData, "MEM"),
-		TotalPods: clusterMetricsData.TotalPods,
-		ColorMapPods: maps.ColorRuleResources(clusterMetricsData, "POD"),
-		CounterLessThan65: lt65,
+		TotalCPU:             clusterMetricsData.TotalCPU,
+		ColorMapCPU:          maps.ColorRuleResources(clusterMetricsData, "CPU"),
+		TotalMemory:          clusterMetricsData.TotalMemory,
+		ColorMapMemory:       maps.ColorRuleResources(clusterMetricsData, "MEM"),
+		TotalPods:            clusterMetricsData.TotalPods,
+		ColorMapPods:         maps.ColorRuleResources(clusterMetricsData, "POD"),
+		CounterLessThan65:    lt65,
 		CounterGreaterThan65: gt65,
 		CounterGreaterThen80: gt80,
-		
+
 		// Alerts
 		Alerts: alertsData,
-		
+
 		// Incidents
 		CertManagerIncidentsColorMap: maps.ColorRuleIncident(certManager),
-		GitaIncidentsColorMap: maps.ColorRuleIncident(gita),
-		LokiIncidentsColorMap: maps.ColorRuleIncident(loki),
-		MonitoringIncidentsColorMap: maps.ColorRuleIncident(monitoring),
-		RancherIncidentsColorMap: maps.ColorRuleIncident(cattleSystem),
-		OtherIncidentsColorMap: maps.ColorRuleIncident(others),
+		GitaIncidentsColorMap:        maps.ColorRuleIncident(gita),
+		LokiIncidentsColorMap:        maps.ColorRuleIncident(loki),
+		MonitoringIncidentsColorMap:  maps.ColorRuleIncident(monitoring),
+		RancherIncidentsColorMap:     maps.ColorRuleIncident(cattleSystem),
+		OtherIncidentsColorMap:       maps.ColorRuleIncident(others),
 	}
 }

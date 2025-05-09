@@ -19,28 +19,27 @@ const requestBody = `{
 	"search": "string",
 	"order": "asc"
   }`
-type Node struct {}
+
+type Node struct{}
 
 func GetNodes(token, clusterId string) ([]Node, error) {
 	payload, err := json.Marshal(requestBody)
 	if err != nil {
 		return nil, fmt.Errorf("error creating JSON Payload, err: %w", err)
 	}
-	
+
 	request, err := http.NewRequest(
-		"POST", 
-		apiUrl+clusterId, 
+		"POST",
+		apiUrl+clusterId,
 		bytes.NewBuffer(payload),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %v", err)
 	}
 
-	
 	request.Header.Set("Authorization", "Bearer "+token)
 	request.Header.Set("Accept", "application/json")
 
-	
 	client := &http.Client{}
 	response, err := client.Do(request)
 	if err != nil {
@@ -91,9 +90,9 @@ type DateTime struct {
 
 func GetKubernetesVersion(token, clusterId string) (string, error) {
 	body, err := httputils.HttpRequest(
-		nil, 
-		"GET", 
-		"https://api-principal-geral.api.gita.cloud/cluster-infosversion/" + clusterId,
+		nil,
+		"GET",
+		"https://api-principal-geral.api.gita.cloud/cluster-infosversion/"+clusterId,
 		token,
 	)
 
@@ -101,9 +100,9 @@ func GetKubernetesVersion(token, clusterId string) (string, error) {
 		return "", fmt.Errorf("error requesting data, err: %w", err)
 	}
 
-	var response VersionResponse 
+	var response VersionResponse
 	if err := json.NewDecoder(bytes.NewReader(body)).Decode(&response); err != nil {
 		return "", fmt.Errorf("error decoding json, err: %w", err)
-	}	
+	}
 	return response.Msg.Version, nil
 }

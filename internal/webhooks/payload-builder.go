@@ -7,27 +7,27 @@ import (
 
 // KubernetesReportData contains data for the Kubernetes report card
 type KubernetesReportData struct {
-	Title                        string
-	CreatedUtc                   time.Time
-	NodesCount                   int
-	IncidentsCount               int
-	ProblemsCount                int
-	SecurityCount                int
+	Title          string
+	CreatedUtc     time.Time
+	NodesCount     int
+	IncidentsCount int
+	ProblemsCount  int
+	SecurityCount  int
 
-	KubernetesVersion            string
-	EndOfSupport                 string
-	LatestRelease                string
-	K8sVersionSupportColorMap    string
+	KubernetesVersion         string
+	EndOfSupport              string
+	LatestRelease             string
+	K8sVersionSupportColorMap string
 
-	TotalCPU                     int
-	ColorMapCPU                  string
-	TotalMemory                  int
-	ColorMapMemory               string
-	TotalPods                    int
-	ColorMapPods                 string
-	CounterLessThan65            int
-	CounterGreaterThan65         int
-	CounterGreaterThen80         int
+	TotalCPU             int
+	ColorMapCPU          string
+	TotalMemory          int
+	ColorMapMemory       string
+	TotalPods            int
+	ColorMapPods         string
+	CounterLessThan65    int
+	CounterGreaterThan65 int
+	CounterGreaterThen80 int
 
 	Alerts []Alert
 
@@ -40,11 +40,11 @@ type KubernetesReportData struct {
 }
 
 type Alert struct {
-	AlertName string
-	AlertDate                    string
-	AlertResource                string
-	AlertNamespace               string
-	AlertDescription             string
+	AlertName        string
+	AlertDate        string
+	AlertResource    string
+	AlertNamespace   string
+	AlertDescription string
 }
 
 // SendKubernetesReportCard sends a Kubernetes report as an adaptive card
@@ -964,134 +964,134 @@ func SendKubernetesReportCard(webhookURL string, data KubernetesReportData) erro
 }
 
 func buildAlertsSection(data KubernetesReportData) map[string]any {
-    // Create a slice to store all alert rows
-    alertRows := []map[string]any{}
-    
-    // Iterate through alerts and create a row for each one
-    for _, alert := range data.Alerts {
-        alertRow := map[string]any{
-            "type": "TableRow",
-            "cells": []map[string]any{
-                {
-                    "type": "TableCell",
-                    "items": []map[string]any{
-                        {
-                            "type": "TextBlock",
-                            "text": alert.AlertDate,
-                            "wrap": true,
-                        },
-                    },
-                },
-                {
-                    "type": "TableCell",
-                    "items": []map[string]any{
-                        {
-                            "type": "TextBlock",
-                            "text": alert.AlertResource + "\\" + alert.AlertNamespace,
-                            "wrap": true,
-                        },
-                    },
-                },
-                {
-                    "type": "TableCell",
-                    "items": []map[string]any{
-                        {
-                            "type": "TextBlock",
-                            "text": alert.AlertName,
-                            "wrap": true,
-                        },
-                    },
-                },
-                {
-                    "type": "TableCell",
-                    "items": []map[string]any{
-                        {
-                            "type": "TextBlock",
-                            "text": alert.AlertDescription,
-                            "wrap": true,
-                        },
-                    },
-                },
-            },
-        }
-        // Append each alert row to our collection
-        alertRows = append(alertRows, alertRow)
-    }
-    
-    // Create the header row
-    headerRow := map[string]any{
-        "type": "TableRow",
-        "style": "accent",
-        "cells": []map[string]any{
-            {
-                "type": "TableCell",
-                "items": []map[string]any{
-                    {
-                        "type": "TextBlock",
-                        "text": "Data",
-                        "wrap": true,
-                        "weight": "Bolder",
-                    },
-                },
-            },
-            {
-                "type": "TableCell",
-                "items": []map[string]any{
-                    {
-                        "type": "TextBlock",
-                        "text": "Recurso\\Namespace",
-                        "wrap": true,
-                        "weight": "Bolder",
-                    },
-                },
-            },
-            {
-                "type": "TableCell",
-                "items": []map[string]any{
-                    {
-                        "type": "TextBlock",
-                        "text": "Nome",
-                        "wrap": true,
-                        "weight": "Bolder",
-                    },
-                },
-            },
-            {
-                "type": "TableCell",
-                "items": []map[string]any{
-                    {
-                        "type": "TextBlock",
-                        "text": "Descrição",
-                        "wrap": true,
-                        "weight": "Bolder",
-                    },
-                },
-            },
-        },
-    }
-    
-    // Combine header row with alert rows
-    allRows := []map[string]any{headerRow}
-    allRows = append(allRows, alertRows...)
-    
-    return map[string]any{
-        "type": "Container",
-        "items": []map[string]any{
-            {
-                "type": "TextBlock",
-                "text": "5. Alertas",
-                "wrap": true,
-            },
-            {
-                "type": "Table",
-                "columns": []map[string]any{
-                    {"width": 1},
-                    {"width": 1},
-                    {"width": 1},
-                    {"width": 1},
-                },
-                "rows": allRows,
-            },
-        },
-    }
+	// Create a slice to store all alert rows
+	alertRows := []map[string]any{}
+
+	// Iterate through alerts and create a row for each one
+	for _, alert := range data.Alerts {
+		alertRow := map[string]any{
+			"type": "TableRow",
+			"cells": []map[string]any{
+				{
+					"type": "TableCell",
+					"items": []map[string]any{
+						{
+							"type": "TextBlock",
+							"text": alert.AlertDate,
+							"wrap": true,
+						},
+					},
+				},
+				{
+					"type": "TableCell",
+					"items": []map[string]any{
+						{
+							"type": "TextBlock",
+							"text": alert.AlertResource + "\\" + alert.AlertNamespace,
+							"wrap": true,
+						},
+					},
+				},
+				{
+					"type": "TableCell",
+					"items": []map[string]any{
+						{
+							"type": "TextBlock",
+							"text": alert.AlertName,
+							"wrap": true,
+						},
+					},
+				},
+				{
+					"type": "TableCell",
+					"items": []map[string]any{
+						{
+							"type": "TextBlock",
+							"text": alert.AlertDescription,
+							"wrap": true,
+						},
+					},
+				},
+			},
+		}
+		// Append each alert row to our collection
+		alertRows = append(alertRows, alertRow)
+	}
+
+	// Create the header row
+	headerRow := map[string]any{
+		"type":  "TableRow",
+		"style": "accent",
+		"cells": []map[string]any{
+			{
+				"type": "TableCell",
+				"items": []map[string]any{
+					{
+						"type":   "TextBlock",
+						"text":   "Data",
+						"wrap":   true,
+						"weight": "Bolder",
+					},
+				},
+			},
+			{
+				"type": "TableCell",
+				"items": []map[string]any{
+					{
+						"type":   "TextBlock",
+						"text":   "Recurso\\Namespace",
+						"wrap":   true,
+						"weight": "Bolder",
+					},
+				},
+			},
+			{
+				"type": "TableCell",
+				"items": []map[string]any{
+					{
+						"type":   "TextBlock",
+						"text":   "Nome",
+						"wrap":   true,
+						"weight": "Bolder",
+					},
+				},
+			},
+			{
+				"type": "TableCell",
+				"items": []map[string]any{
+					{
+						"type":   "TextBlock",
+						"text":   "Descrição",
+						"wrap":   true,
+						"weight": "Bolder",
+					},
+				},
+			},
+		},
+	}
+
+	// Combine header row with alert rows
+	allRows := []map[string]any{headerRow}
+	allRows = append(allRows, alertRows...)
+
+	return map[string]any{
+		"type": "Container",
+		"items": []map[string]any{
+			{
+				"type": "TextBlock",
+				"text": "5. Alertas",
+				"wrap": true,
+			},
+			{
+				"type": "Table",
+				"columns": []map[string]any{
+					{"width": 1},
+					{"width": 1},
+					{"width": 1},
+					{"width": 1},
+				},
+				"rows": allRows,
+			},
+		},
+	}
 }

@@ -6,7 +6,7 @@ import (
 
 	"github.com/asolheiro/gita-healthcheck/internal/api-calls/alerts"
 	"github.com/asolheiro/gita-healthcheck/internal/api-calls/auth"
-	"github.com/asolheiro/gita-healthcheck/internal/api-calls/count" 
+	"github.com/asolheiro/gita-healthcheck/internal/api-calls/count"
 	"github.com/asolheiro/gita-healthcheck/internal/api-calls/incidents"
 	"github.com/asolheiro/gita-healthcheck/internal/api-calls/metrics"
 	"github.com/asolheiro/gita-healthcheck/internal/api-calls/problem"
@@ -64,12 +64,11 @@ func GenerateFile(args FileVars) {
 		args.KubernetesInfo.EndOfSupport,
 		args.KubernetesInfo.LastRelease,
 		args.KubernetesInfo.SupportStatus,
-
 	}
 
 	m.Table(md.TableSet{
-	Header: []string{"Versão", "Fim do suporte", "Última release disponível", "Suporte"},
-	Rows: [][]string{k8sInfo},
+		Header: []string{"Versão", "Fim do suporte", "Última release disponível", "Suporte"},
+		Rows:   [][]string{k8sInfo},
 	})
 
 	m.PlainText("> Legenda:\n>\n> 🟩 - LTS; 🟨 - menos de 90 dias restantes; 🟧 - menos de 30 dias restantes 🟥 - desatualizado.")
@@ -136,8 +135,8 @@ func GenerateFile(args FileVars) {
 			"-",
 			"-",
 		}
-		} else {
-			for i, alert := range args.AlertsList {
+	} else {
+		for i, alert := range args.AlertsList {
 			alerts[i] = []string{
 				alert.DataHora.Date.Format("02/01/06"),
 				alert.Kind + "\\" + alert.Namespace,
@@ -181,7 +180,7 @@ func GenerateFile(args FileVars) {
 			}
 		}
 	}
-	
+
 	m.Table(md.TableSet{
 		Header: []string{"Stack", "Namespace", "Status"},
 		Rows: [][]string{
@@ -210,6 +209,3 @@ func colorRuleIncident(i int) string {
 		return "🟩"
 	}
 }
-
-
-

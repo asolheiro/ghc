@@ -83,7 +83,6 @@ func DaysUntilEndOfSupport(endDateStr string) (int, error) {
 	return daysRemaining, nil
 }
 
-
 func IdentifyProductType(version string) (string, string) {
 	re := regexp.MustCompile(`v(\d+\.\d+)`)
 
@@ -107,7 +106,7 @@ func IdentifyProductType(version string) (string, string) {
 
 type KubernetesVersionResponse struct {
 	Version       string
-	EndOfSupport string
+	EndOfSupport  string
 	LastRelease   string
 	SupportStatus string
 }
@@ -122,12 +121,12 @@ func GatherKubernetesInfo(version string) (KubernetesVersionResponse, error) {
 	if cycleInfo == CycleInfoRKE {
 		return KubernetesVersionResponse{
 			Version:       version,
-			EndOfSupport: "---",
-			LastRelease: "[RKE2-Releases](https://github.com/rancher/rke2/releases)",
+			EndOfSupport:  "---",
+			LastRelease:   "[RKE2-Releases](https://github.com/rancher/rke2/releases)",
 			SupportStatus: "[Support-Matrix](https://www.suse.com/pt-br/suse-rke1/support-matrix/all-supported-versions/rke1-v1-31/)",
 		}, nil
 	}
-	
+
 	daysRemaining, err := DaysUntilEndOfSupport(cycleInfo.EndOfLife)
 	if err != nil {
 		return KubernetesVersionResponse{}, fmt.Errorf("error retrieving remaing days")
@@ -139,11 +138,10 @@ func GatherKubernetesInfo(version string) (KubernetesVersionResponse, error) {
 		return KubernetesVersionResponse{}, fmt.Errorf("error parsing date, err: %v", err)
 	}
 
-	
 	return KubernetesVersionResponse{
 		Version:       version,
-		EndOfSupport: endOfSupport.Format("02/01/2006"),
-		LastRelease: cycleInfo.Latest,
+		EndOfSupport:  endOfSupport.Format("02/01/2006"),
+		LastRelease:   cycleInfo.Latest,
 		SupportStatus: colorMark,
 	}, nil
 }

@@ -11,9 +11,9 @@ import (
 )
 
 type Response struct {
-	Status string     `json:"status"`
+	Status string    `json:"status"`
 	Msg    []Problem `json:"msg"`
-	Total  int        `json:"total"`
+	Total  int       `json:"total"`
 }
 
 type Problem struct {

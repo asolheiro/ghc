@@ -10,7 +10,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-
 func init() {
 	generatePageCmd.Flags().StringVarP(&orgFilter, "org", "o", "", "Filter report to specific organization name")
 }
@@ -35,6 +34,6 @@ var generatePageCmd = &cobra.Command{
 			}
 		} else {
 			fmt.Printf("Please, enter a '-o/--org' value")
-		}	
+		}
 	},
 }

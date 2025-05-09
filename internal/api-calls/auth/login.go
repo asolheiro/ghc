@@ -26,43 +26,43 @@ type AuthResponse struct {
 
 func Authentication() (*AuthResponse, error) {
 	var authResponse *AuthResponse
-		err := godotenv.Load()
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println("No .env file found, please, enter your credentials:")
+
+		var email string
+		fmt.Print("\ne-mail: ")
+		fmt.Scan(&email)
+
+		fmt.Print("password: ")
+		bytePassword, err := term.ReadPassword(int(os.Stdin.Fd()))
 		if err != nil {
-			fmt.Println("No .env file found, please, enter your credentials:")
-
-			var email string
-			fmt.Print("\ne-mail: ")
-			fmt.Scan(&email)
-	
-			fmt.Print("password: ")
-			bytePassword, err := term.ReadPassword(int(os.Stdin.Fd()))
-			if err != nil {
-				return nil, fmt.Errorf("failed to read password: %v", err)
-			}
-
-			password := string(bytePassword)
-			authResponse, err = Login(
-				email, 
-				password,
-			)
-			if err != nil {
-				return nil, fmt.Errorf("failed to authenticate, err: %v", err)
-			}
-		} else {
-			authResponse, err = Login(
-				os.Getenv("EMAIL"), 
-				os.Getenv("PASSWORD"),
-			)
-			if err != nil {
-				return nil, fmt.Errorf("failed to authenticate, err: %v", err)
-			}
+			return nil, fmt.Errorf("failed to read password: %v", err)
 		}
+
+		password := string(bytePassword)
+		authResponse, err = Login(
+			email,
+			password,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to authenticate, err: %v", err)
+		}
+	} else {
+		authResponse, err = Login(
+			os.Getenv("EMAIL"),
+			os.Getenv("PASSWORD"),
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to authenticate, err: %v", err)
+		}
+	}
 	return authResponse, nil
 }
 
-func Login(email, password string) (*AuthResponse, error){
+func Login(email, password string) (*AuthResponse, error) {
 	payload, err := json.Marshal(AuthRequest{
-		Email: email,
+		Email:    email,
 		Password: password,
 	})
 	if err != nil {
@@ -74,7 +74,7 @@ func Login(email, password string) (*AuthResponse, error){
 		authUrl,
 		bytes.NewBuffer(payload),
 	)
-	 if err != nil {
+	if err != nil {
 		return nil, fmt.Errorf("error creating request, err : %w", err)
 	}
 
@@ -98,4 +98,3 @@ func Login(email, password string) (*AuthResponse, error){
 	}
 	return &authResponse, nil
 }
-	

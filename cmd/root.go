@@ -9,8 +9,8 @@ import (
 
 func NewRootCmd() *cobra.Command {
 	rootCmd := &cobra.Command{
-		Use:           "ghc",
-		Short:         "Gita HealthCheck is a simple report generator of Gita's plataform",
+		Use:   "ghc",
+		Short: "Gita HealthCheck is a simple report generator of Gita's plataform",
 		Long: `
 Gita HealthCheck is a simple report generator of Gita's plataform that automatize
 the manual work that analists do every morning.
@@ -43,6 +43,6 @@ func Execute() {
 }
 
 var (
-	orgFilter string
+	orgFilter        string
 	concurrencyLimit int
 )

@@ -74,50 +74,50 @@ func generateOrgReport(org count.Msg, auth *auth.AuthResponse) string {
 
 	var wg sync.WaitGroup
 	semaphore := make(chan struct{}, 5)
-	
+
 	fileMutex := sync.Mutex{}
 	for i, cluster := range org.Clusters {
 		wg.Add(1)
 		semaphore <- struct{}{}
 
-	var allFileVars []md.FileVars
-	var allFileVarsMutex sync.Mutex
+		var allFileVars []md.FileVars
+		var allFileVarsMutex sync.Mutex
 
-	go func(index int, clusterInfo count.Cluster) {
-		defer wg.Done()
-		defer func() { <-semaphore }()
-		
-		fileVars := md.FindInfo(auth, org, index, clusterInfo)
-		
-		allFileVarsMutex.Lock()
-		allFileVars = append(allFileVars, fileVars)
-		allFileVarsMutex.Unlock()
-	}(i, cluster)
-	wg.Wait()
+		go func(index int, clusterInfo count.Cluster) {
+			defer wg.Done()
+			defer func() { <-semaphore }()
 
-	sort.Slice(allFileVars, func(i, j int) bool {
-		return allFileVars[i].Index < allFileVars[j].Index
-	})
+			fileVars := md.FindInfo(auth, org, index, clusterInfo)
 
-	for _, fileVars := range allFileVars {
-		md.GenerateFile(fileVars)
-		tmpFile := fmt.Sprintf("%d-gita-report-%s.md", fileVars.Index, fileVars.Cluster.Name)
-		tmpContent, err := os.ReadFile(tmpFile)
-		if err != nil {
-			log.Printf("Error reading temp file %s: %v", tmpFile, err)
-			continue
+			allFileVarsMutex.Lock()
+			allFileVars = append(allFileVars, fileVars)
+			allFileVarsMutex.Unlock()
+		}(i, cluster)
+		wg.Wait()
+
+		sort.Slice(allFileVars, func(i, j int) bool {
+			return allFileVars[i].Index < allFileVars[j].Index
+		})
+
+		for _, fileVars := range allFileVars {
+			md.GenerateFile(fileVars)
+			tmpFile := fmt.Sprintf("%d-gita-report-%s.md", fileVars.Index, fileVars.Cluster.Name)
+			tmpContent, err := os.ReadFile(tmpFile)
+			if err != nil {
+				log.Printf("Error reading temp file %s: %v", tmpFile, err)
+				continue
+			}
+
+			fileMutex.Lock()
+			if _, err := f1.Write(tmpContent); err != nil {
+				log.Printf("Error writing cluster content: %v", err)
+			}
+			fileMutex.Unlock()
+
+			if err := os.Remove(tmpFile); err != nil {
+				log.Printf("Warning: couldn't remove temp file %s: %v", tmpFile, err)
+			}
 		}
-		
-		fileMutex.Lock()
-		if _, err := f1.Write(tmpContent); err != nil {
-			log.Printf("Error writing cluster content: %v", err)
-		}
-		fileMutex.Unlock()
-		
-		if err := os.Remove(tmpFile); err != nil {
-			log.Printf("Warning: couldn't remove temp file %s: %v", tmpFile, err)
-		}
-	}
 	}
 
 	wg.Wait()

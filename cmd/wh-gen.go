@@ -53,21 +53,18 @@ var whMessageCmd = &cobra.Command{
 
 			for _, cluster := range organizationCount.Clusters {
 				k8sReportData := webhooks.FindClustersInfo(authResponse, organizationCount, cluster)
-				
+
 				if err != nil {
 					log.Fatalf("failed to generate string from markdown, err: %s", err)
 				}
-				
+
 				if err := webhooks.SendKubernetesReportCard(webhookURL, k8sReportData); err != nil {
 					fmt.Println("Erro:", err)
 				} else {
 					fmt.Println("Enviado com sucesso!")
 				}
-
-
-				
 			}
 		}
 
-		},
-	}
+	},
+}

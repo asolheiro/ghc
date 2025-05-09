@@ -51,7 +51,7 @@ in the cost of a few lines in CLI
 		if err != nil {
 			log.Fatal(err)
 		}
-		
+
 		if orgFilter == "" {
 			processAllOrgs(userCount.Msg, *authResponse)
 		} else {
@@ -63,8 +63,6 @@ in the cost of a few lines in CLI
 		}
 	},
 }
-
-
 
 type hcVars struct {
 	usageCPU      string
@@ -90,14 +88,14 @@ func getInfoWithGoRoutine(auth auth.AuthResponse, clusterId string) hcVars {
 			log.Printf("Error getting cluster metrics: %v", err)
 			return
 		}
-		
+
 		mutex.Lock()
 		res.usageCPU = fmt.Sprintf("%.2f%%", cm.CPUUsePercentage)
 		res.usageRAM = fmt.Sprintf("%.2f%%", cm.MemoryUsePercentage)
 		res.usagePod = fmt.Sprintf("%d/%d", cm.TotalPods, cm.TotalPodCapacity)
 		mutex.Unlock()
 	}()
-	
+
 	go func() {
 		defer wg.Done()
 		alerts, err := alerts.GetAlerts(auth.AccessToken, clusterId)
@@ -105,12 +103,12 @@ func getInfoWithGoRoutine(auth auth.AuthResponse, clusterId string) hcVars {
 			log.Printf("Error getting alerts: %v", err)
 			return
 		}
-		
+
 		mutex.Lock()
 		res.alertsNum = fmt.Sprintf("%d", len(alerts))
 		mutex.Unlock()
 	}()
-	
+
 	go func() {
 		defer wg.Done()
 		incidents, err := incidents.GetIncidents(auth.AccessToken, clusterId)
@@ -118,12 +116,12 @@ func getInfoWithGoRoutine(auth auth.AuthResponse, clusterId string) hcVars {
 			log.Printf("Error getting incidents: %v", err)
 			return
 		}
-		
+
 		mutex.Lock()
 		res.incidentsNum = fmt.Sprintf("%d", incidents.Total)
 		mutex.Unlock()
 	}()
-	
+
 	go func() {
 		defer wg.Done()
 		securities, err := security.GetSecurity(auth.AccessToken, clusterId)
@@ -131,12 +129,12 @@ func getInfoWithGoRoutine(auth auth.AuthResponse, clusterId string) hcVars {
 			log.Printf("Error getting securities: %v", err)
 			return
 		}
-		
+
 		mutex.Lock()
 		res.securitiesNum = fmt.Sprintf("%d", securities.Total)
 		mutex.Unlock()
 	}()
-	
+
 	go func() {
 		defer wg.Done()
 		problems, err := problem.GetProblems(auth.AccessToken, clusterId)
@@ -144,33 +142,33 @@ func getInfoWithGoRoutine(auth auth.AuthResponse, clusterId string) hcVars {
 			log.Printf("Error getting problems: %v", err)
 			return
 		}
-		
+
 		mutex.Lock()
 		res.problemsNum = fmt.Sprintf("%d", problems.Total)
 		mutex.Unlock()
 	}()
-	
+
 	wg.Wait()
 	return res
 }
 
 func processOrg(org count.Msg, authResponse auth.AuthResponse) {
 	semaphore := make(chan struct{}, concurrencyLimit)
-	
+
 	var wg sync.WaitGroup
 	var mutex sync.Mutex
 	rows := make([]table.Row, 0, len(org.Clusters))
-	
+
 	for _, cluster := range org.Clusters {
 		wg.Add(1)
 		go func(c count.Cluster) {
 			defer wg.Done()
-			
+
 			semaphore <- struct{}{}
 			defer func() { <-semaphore }()
-			
+
 			res := getInfoWithGoRoutine(authResponse, c.ClusterID)
-			
+
 			row := []any{
 				c.Name,
 				c.ClusterID,
@@ -182,13 +180,13 @@ func processOrg(org count.Msg, authResponse auth.AuthResponse) {
 				res.problemsNum,
 				res.securitiesNum,
 			}
-			
+
 			mutex.Lock()
 			rows = append(rows, row)
 			mutex.Unlock()
 		}(cluster)
 	}
-	
+
 	wg.Wait()
 	clusterSpec := fmt.Sprintf("\n %s (%s)\n", org.Organization.Name, org.Organization.ID)
 	color.RGB(241, 191, 36).Println(clusterSpec)

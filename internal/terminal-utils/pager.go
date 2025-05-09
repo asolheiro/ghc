@@ -10,7 +10,6 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-
 var (
 	titleStyle = func() lipgloss.Style {
 		b := lipgloss.RoundedBorder()
@@ -105,7 +104,7 @@ func PrintTea(fileName string) {
 
 	p := tea.NewProgram(
 		model{
-			content: string(content),
+			content:  string(content),
 			fileName: fileName,
 		},
 		tea.WithAltScreen(),
@@ -117,5 +116,3 @@ func PrintTea(fileName string) {
 		os.Exit(1)
 	}
 }
-
-

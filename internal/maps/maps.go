@@ -70,7 +70,7 @@ func ColorRuleResources(cm metrics.TotalMetrics, rss string) string {
 		if cm.TotalPodCapacity == 0 {
 			return "🟥"
 		}
-		
+
 		per100 := (cm.TotalPods / cm.TotalPodCapacity) * 100
 		if per100 < 65.00 {
 			return "🟩"

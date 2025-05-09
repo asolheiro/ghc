@@ -11,7 +11,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-
 func init() {
 	graphQlCmd.Flags().StringVarP(&orgFilter, "org", "o", "", "Filter report to specific organization name")
 }
@@ -46,6 +45,6 @@ var graphQlCmd = &cobra.Command{
 			}
 		} else {
 			fmt.Printf("Please, enter a '-o/--org' value")
-		}	
+		}
 	},
 }
