@@ -2,13 +2,15 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+	"os"
 
+	"github.com/asolheiro/gita-healthcheck/internal/api-calls/auth"
+	"github.com/asolheiro/gita-healthcheck/internal/api-calls/count"
 	"github.com/asolheiro/gita-healthcheck/internal/webhooks"
+	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 )
-
-const WEBHOOK_URL = "https://chat.jacexperts.io/hooks/rt1ctb8ox7y1dekjmax1xekyqw"
-
 
 func init() {
 	whMessageCmd.Flags().StringVarP(&orgFilter, "org", "o", "", "Filter report to specific organization name")
@@ -18,30 +20,54 @@ var whMessageCmd = &cobra.Command{
 	Use:   "wh-msg",
 	Short: "test",
 	Run: func(cmd *cobra.Command, args []string) {
-		
-			message := "Here's a PDF document for your review!"
-			pdfPath := "../reports/CHESF_14-04-2025.pdf" // Replace with the path to your PDF file
-			
-			// For Mattermost testing, use this method
-			fmt.Println("Sending PDF to Mattermost...")
-			err := webhooks.SendMessageWithPDF(WEBHOOK_URL, message, pdfPath)
-			if err != nil {
-				fmt.Printf("Error sending to Mattermost: %v\n", err)
-			} else {
-				fmt.Println("Message with PDF sent successfully to Mattermost!")
+
+		authResponse, err := auth.Authentication()
+		if err != nil {
+			log.Fatalf("failed to authenticate on Gita, err: %s", err)
+		}
+
+		userCount, err := count.GetUserCount(authResponse.AccessToken)
+		if err != nil {
+			log.Fatalf("failed to get orgs info on Gita, err: %s", err)
+		}
+
+		if orgFilter == "" {
+			fmt.Printf("Please, enter a '-o/--org' value")
+		} else {
+			if err := godotenv.Load(); err != nil {
+				log.Fatalf("failed to load .env, err: %s ", err)
 			}
-			
-			// For Microsoft Teams (when you're ready to switch)
-			// Note: You may need to adjust this based on Teams' specific requirements
-			/*
-			fmt.Println("Sending PDF to Microsoft Teams...")
-			err = sendPDFMultipart(webhookURL, message, pdfPath)
-			if err != nil {
-				fmt.Printf("Error sending to Microsoft Teams: %v\n", err)
-			} else {
-				fmt.Println("Message with PDF sent successfully to Microsoft Teams!")
+
+			webhookURL := os.Getenv("WEBHOOK_URL")
+			if webhookURL == "" {
+				log.Fatal("WEBHOOK_URL environment variable is not set")
 			}
-			*/
-	},
-	
-}
+
+			var organizationCount count.Msg
+			for _, orgCount := range userCount.Msg {
+				if orgCount.Organization.Name == orgFilter {
+					organizationCount = orgCount
+					break
+				}
+			}
+
+			for _, cluster := range organizationCount.Clusters {
+				k8sReportData := webhooks.FindClustersInfo(authResponse, organizationCount, cluster)
+				
+				if err != nil {
+					log.Fatalf("failed to generate string from markdown, err: %s", err)
+				}
+				
+				if err := webhooks.SendKubernetesReportCard(webhookURL, k8sReportData); err != nil {
+					fmt.Println("Erro:", err)
+				} else {
+					fmt.Println("Enviado com sucesso!")
+				}
+
+
+				
+			}
+		}
+
+		},
+	}

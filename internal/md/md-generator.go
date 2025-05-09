@@ -6,7 +6,7 @@ import (
 
 	"github.com/asolheiro/gita-healthcheck/internal/api-calls/alerts"
 	"github.com/asolheiro/gita-healthcheck/internal/api-calls/auth"
-	"github.com/asolheiro/gita-healthcheck/internal/api-calls/count"
+	"github.com/asolheiro/gita-healthcheck/internal/api-calls/count" 
 	"github.com/asolheiro/gita-healthcheck/internal/api-calls/incidents"
 	"github.com/asolheiro/gita-healthcheck/internal/api-calls/metrics"
 	"github.com/asolheiro/gita-healthcheck/internal/api-calls/problem"
@@ -82,9 +82,9 @@ func GenerateFile(args FileVars) {
 	m.Table(md.TableSet{
 		Header: []string{"Recursos", "Capacidade", "Status"},
 		Rows: [][]string{
-			{"CPU", fmt.Sprintf("%d cores", args.ClusterMetrics.TotalCPU), colorRuleResources(args.ClusterMetrics, "CPU")},
-			{"Memória", fmt.Sprintf("%.2f Gib", maps.TotalMemoryToGib(args.ClusterMetrics.TotalMemory)), colorRuleResources(args.ClusterMetrics, "MEM")},
-			{"PODS", fmt.Sprintf("%d", args.ClusterMetrics.TotalPodCapacity), colorRuleResources(args.ClusterMetrics, "POD")},
+			{"CPU", fmt.Sprintf("%d cores", args.ClusterMetrics.TotalCPU), maps.ColorRuleResources(args.ClusterMetrics, "CPU")},
+			{"Memória", fmt.Sprintf("%.2f Gib", maps.TotalMemoryToGib(args.ClusterMetrics.TotalMemory)), maps.ColorRuleResources(args.ClusterMetrics, "MEM")},
+			{"PODS", fmt.Sprintf("%d", args.ClusterMetrics.TotalPodCapacity), maps.ColorRuleResources(args.ClusterMetrics, "POD")},
 		},
 	})
 
@@ -104,8 +104,8 @@ func GenerateFile(args FileVars) {
 		case nodeMetric.MemoryUsePercentage < 65.00:
 			lt65++
 		}
-
 	}
+
 	m.Table(md.TableSet{
 		Header: []string{"Grupo", "Quantidade", "Status"},
 		Rows: [][]string{
@@ -181,6 +181,7 @@ func GenerateFile(args FileVars) {
 			}
 		}
 	}
+	
 	m.Table(md.TableSet{
 		Header: []string{"Stack", "Namespace", "Status"},
 		Rows: [][]string{
@@ -210,40 +211,5 @@ func colorRuleIncident(i int) string {
 	}
 }
 
-func colorRuleResources(cm metrics.TotalMetrics, rss string) string {
-	switch rss {
-	case "POD":
-		if cm.TotalPodCapacity == 0 {
-			return "🟥"
-		}
-		
-		per100 := (cm.TotalPods / cm.TotalPodCapacity) * 100
-		if per100 < 65.00 {
-			return "🟩"
-		} else if per100 >= 60.00 && per100 < 80.00 {
-			return "🟨"
-		} else {
-			return "🟥"
-		}
-	case "CPU":
-		if cm.CPUUsePercentage < 65.00 {
-			return "🟩"
-		} else if cm.CPUUsePercentage >= 65.00 && cm.CPUUsePercentage < 80.00 {
-			return "🟨"
-		} else {
-			return "🟥"
-		}
-	case "MEM":
-		if cm.MemoryUsePercentage < 65.00 {
-			return "🟩"
-		} else if cm.MemoryUsePercentage >= 65.00 && cm.MemoryUsePercentage < 80.00 {
-			return "🟨"
-		} else {
-			return "🟥"
-		}
-	default:
-		return ""
-	}
-}
 
 

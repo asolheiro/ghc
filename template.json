@@ -1,0 +1,1054 @@
+{
+    "type": "AdaptiveCard",
+    "body": [
+        {
+            "type": "TextBlock",
+            "size": "Medium",
+            "weight": "Bolder",
+            "text": "[[title]]"
+        },
+        {
+            "type": "ColumnSet",
+            "columns": [
+                {
+                    "type": "Column",
+                    "items": [
+                        {
+                            "type": "TextBlock",
+                            "spacing": "None",
+                            "text": "{{.CreatedUTC}}",
+                            "isSubtle": true,
+                            "wrap": true
+                        },
+                        {
+                            "type": "Container",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "text": "1. Informações gerais:",
+                                    "wrap": true
+                                },
+                                {
+                                    "type": "Table",
+                                    "gridStyle": "accent",
+                                    "columns": [
+                                        {
+                                            "width": 1
+                                        },
+                                        {
+                                            "width": 1
+                                        }
+                                    ],
+                                    "rows": [
+                                        {
+                                            "type": "TableRow",
+                                            "cells": [
+                                                {
+                                                    "type": "TableCell",
+                                                    "items": [
+                                                        {
+                                                            "type": "TextBlock",
+                                                            "text": "Métrica",
+                                                            "wrap": true,
+                                                            "weight": "Bolder"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "TableCell",
+                                                    "items": [
+                                                        {
+                                                            "type": "TextBlock",
+                                                            "text": "Valor",
+                                                            "wrap": true,
+                                                            "weight": "Bolder"
+                                                        }
+                                                    ]
+                                                }
+                                            ],
+                                            "style": "accent"
+                                        },
+                                        {
+                                            "type": "TableRow",
+                                            "cells": [
+                                                {
+                                                    "type": "TableCell",
+                                                    "style": "emphasis",
+                                                    "items": [
+                                                        {
+                                                            "type": "TextBlock",
+                                                            "text": "Nodes",
+                                                            "wrap": true
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "TableCell",
+                                                    "style": "emphasis",
+                                                    "items": [
+                                                        {
+                                                            "type": "TextBlock",
+                                                            "text": "[[nodesCount]]",
+                                                            "wrap": true
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "TableRow",
+                                            "cells": [
+                                                {
+                                                    "type": "TableCell",
+                                                    "style": "emphasis",
+                                                    "items": [
+                                                        {
+                                                            "type": "TextBlock",
+                                                            "text": "Incidentes",
+                                                            "wrap": true
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "TableCell",
+                                                    "style": "emphasis",
+                                                    "items": [
+                                                        {
+                                                            "type": "TextBlock",
+                                                            "text": "[[incidentsCount]]",
+                                                            "wrap": true
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "TableRow",
+                                            "cells": [
+                                                {
+                                                    "type": "TableCell",
+                                                    "style": "emphasis",
+                                                    "items": [
+                                                        {
+                                                            "type": "TextBlock",
+                                                            "text": "Problemas",
+                                                            "wrap": true
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "TableCell",
+                                                    "style": "emphasis",
+                                                    "items": [
+                                                        {
+                                                            "type": "TextBlock",
+                                                            "text": "[[problemsCount]]",
+                                                            "wrap": true
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "TableRow",
+                                            "cells": [
+                                                {
+                                                    "type": "TableCell",
+                                                    "style": "emphasis",
+                                                    "items": [
+                                                        {
+                                                            "type": "TextBlock",
+                                                            "text": "Segurança",
+                                                            "wrap": true
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "TableCell",
+                                                    "style": "emphasis",
+                                                    "items": [
+                                                        {
+                                                            "type": "TextBlock",
+                                                            "text": "[[segurityCount]]",
+                                                            "wrap": true
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "width": "stretch"
+                }
+            ]
+        },
+        {
+            "type": "Container",
+            "items": [
+                {
+                    "type": "TextBlock",
+                    "text": "2. Versão do Kubernetes",
+                    "wrap": true
+                },
+                {
+                    "type": "Table",
+                    "columns": [
+                        {
+                            "width": 1
+                        },
+                        {
+                            "width": 1
+                        },
+                        {
+                            "width": 1
+                        },
+                        {
+                            "width": 1
+                        }
+                    ],
+                    "rows": [
+                        {
+                            "type": "TableRow",
+                            "cells": [
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "Versão",
+                                            "wrap": true,
+                                            "weight": "Bolder"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "Fim do suporte",
+                                            "wrap": true,
+                                            "weight": "Bolder"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "Última release disponível",
+                                            "wrap": true,
+                                            "weight": "Bolder"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "Suporte",
+                                            "wrap": true,
+                                            "weight": "Bolder"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "style": "accent"
+                        },
+                        {
+                            "type": "TableRow",
+                            "cells": [
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "[[kubernetesVersion]]",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "[[endOfSuporte]]",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "[[latestRelease]]",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "[[supportColor]]",
+                                            "wrap": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Container",
+            "items": [
+                {
+                    "type": "TextBlock",
+                    "text": "3. Informações de recursos",
+                    "wrap": true
+                },
+                {
+                    "type": "Table",
+                    "columns": [
+                        {
+                            "width": 1
+                        },
+                        {
+                            "width": 1
+                        },
+                        {
+                            "width": 1
+                        }
+                    ],
+                    "rows": [
+                        {
+                            "type": "TableRow",
+                            "cells": [
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "Recursos",
+                                            "wrap": true,
+                                            "weight": "Bolder"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "Capacidade",
+                                            "wrap": true,
+                                            "weight": "Bolder"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "Status",
+                                            "wrap": true,
+                                            "weight": "Bolder"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "style": "accent"
+                        },
+                        {
+                            "type": "TableRow",
+                            "cells": [
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "CPU",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "[[totalCPU]]",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "[[cpuColorMap]]",
+                                            "wrap": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "TableRow",
+                            "cells": [
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "Memória",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "[[totalMemory]]",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "[[memoryColorMap]]",
+                                            "wrap": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "TableRow",
+                            "cells": [
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "PODS",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "[[totalPods]]",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "[[podsColorMap]]",
+                                            "wrap": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Container",
+            "items": [
+                {
+                    "type": "TextBlock",
+                    "text": "4. Uso de memória nos nodes",
+                    "wrap": true
+                },
+                {
+                    "type": "Table",
+                    "columns": [
+                        {
+                            "width": 1
+                        },
+                        {
+                            "width": 1
+                        },
+                        {
+                            "width": 1
+                        }
+                    ],
+                    "rows": [
+                        {
+                            "type": "TableRow",
+                            "cells": [
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "Grupo",
+                                            "wrap": true,
+                                            "weight": "Bolder"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "Capacidade",
+                                            "wrap": true,
+                                            "weight": "Bolder"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "Status",
+                                            "wrap": true,
+                                            "weight": "Bolder"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "style": "accent"
+                        },
+                        {
+                            "type": "TableRow",
+                            "cells": [
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "X < 65%",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "[[counterLessThan65]]",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "[[counterLessThan65ColorMap]]",
+                                            "wrap": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "TableRow",
+                            "cells": [
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "x > 65%",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "[[counterGreaterThan65]]",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "[[counterGreaterThan65ColorMap]]",
+                                            "wrap": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "TableRow",
+                            "cells": [
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "X > 80%",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "[[counterGreaterThen80]]",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "[[counterGreaterThen80ColorMap]]",
+                                            "wrap": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Container",
+            "items": [
+                {
+                    "type": "TextBlock",
+                    "text": "5. Alertas",
+                    "wrap": true
+                },
+                {
+                    "type": "Table",
+                    "columns": [
+                        {
+                            "width": 1
+                        },
+                        {
+                            "width": 1
+                        },
+                        {
+                            "width": 1
+                        },
+                        {
+                            "width": 1
+                        }
+                    ],
+                    "rows": [
+                        {
+                            "type": "TableRow",
+                            "cells": [
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "Data",
+                                            "wrap": true,
+                                            "weight": "Bolder"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "Recurso\\Namespace",
+                                            "wrap": true,
+                                            "weight": "Bolder"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "Nome",
+                                            "wrap": true,
+                                            "weight": "Bolder"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "Descrição",
+                                            "wrap": true,
+                                            "weight": "Bolder"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "style": "accent"
+                        },
+                        {
+                            "type": "TableRow",
+                            "cells": [
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "[[alertDate]]",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "[[alertResource]]\\[[alertNamespace]]",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "[[alertName]]",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "[[alertDescription]]",
+                                            "wrap": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Container",
+            "items": [
+                {
+                    "type": "TextBlock",
+                    "text": "6. Incidentes",
+                    "wrap": true
+                },
+                {
+                    "type": "Table",
+                    "columns": [
+                        {
+                            "width": 1
+                        },
+                        {
+                            "width": 1
+                        },
+                        {
+                            "width": 1
+                        }
+                    ],
+                    "rows": [
+                        {
+                            "type": "TableRow",
+                            "cells": [
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "Stack",
+                                            "wrap": true,
+                                            "weight": "Bolder"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "Namespace",
+                                            "wrap": true,
+                                            "weight": "Bolder"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "Status",
+                                            "wrap": true,
+                                            "weight": "Bolder"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "style": "accent"
+                        },
+                        {
+                            "type": "TableRow",
+                            "cells": [
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "CertManager",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "`cert-manager`",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "[[certManagerIncidentsColorMap]]",
+                                            "wrap": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "TableRow",
+                            "cells": [
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "GITA",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "`gita`",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "[[gitaIncidentsColorMap]]",
+                                            "wrap": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "TableRow",
+                            "cells": [
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "Loki",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "`loki`",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "[[lokiIncidentsColorMap]]",
+                                            "wrap": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "TableRow",
+                            "cells": [
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "Prometheus",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "`monitoring`",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "[[monitoringIncidentsColorMap]]",
+                                            "wrap": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "TableRow",
+                            "cells": [
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "Rancher",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "`cattle-system`",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "[[rancherIncidentsColorMap]]",
+                                            "wrap": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "TableRow",
+                            "cells": [
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "Outros",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "---",
+                                            "wrap": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "[[otherIncidentsColorMap]]",
+                                            "wrap": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+    "version": "1.5"
+}
